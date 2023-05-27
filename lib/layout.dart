@@ -25,14 +25,16 @@ class _LayoutState extends State<Layout> {
 
   Future<void> _getNotes() async {
     var res = await DBHelper.getAllNotes('notes_list');
-
+    print(res);
     List<Map<String, Object?>> pinnedNotes =
         res.where((note) => note['pinned'] == 1).toList();
+
+    print(pinnedNotes);
 
     if (pinnedNotes.isNotEmpty) {
       for (var i = 0; i < pinnedNotes.length; i++) {
         NotificationAPI.showNotification(
-          i,
+          pinnedNotes[i]['id'] as int,
           pinnedNotes[i]['title'] as String,
           pinnedNotes[i]['description'] as String,
           pinnedNotes[i]['priority'] as String,

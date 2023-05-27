@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import 'package:notpin/utils/file_path.dart';
 
 class NotificationAPI {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -11,30 +12,40 @@ class NotificationAPI {
     String body,
     String priority,
   ) async {
+    var subPath = _getPriorityIcon(priority);
+    var path = await FilePath.getFilePath('assets/images/$subPath', subPath);
+
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
       'channel_id',
       'channel_name',
+      channelDescription: 'channel_description',
       importance: Importance.max,
       priority: _getPriority(priority),
       ongoing: true,
       autoCancel: false,
       enableVibration: false,
-      colorized: true,
-      color: _getColor(priority),
+      largeIcon: FilePathAndroidBitmap(path),
     );
+
     NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
+
     await flutterLocalNotificationsPlugin.show(
-      id++,
+      id,
       title,
       body,
       notificationDetails,
+      payload: _getPriority(priority).toString(),
     );
   }
 
   static Future<void> removeAllPinnedNotifications() async {
-    await flutterLocalNotificationsPlugin.cancelAll();
+    return await flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  static Future<void> removePinnedNotifications(int id) async {
+    return await flutterLocalNotificationsPlugin.cancel(id);
   }
 
   static Priority _getPriority(String notePriority) {
@@ -50,16 +61,16 @@ class NotificationAPI {
     }
   }
 
-  static Color _getColor(String notePriority) {
-    switch (notePriority) {
+  static String _getPriorityIcon(String priority) {
+    switch (priority) {
       case 'High':
-        return Colors.red; // Red color
+        return 'high.png';
       case 'Medium':
-        return Colors.yellow; // Yellow color
+        return 'medium.png';
       case 'Low':
-        return Colors.green; // Green color
+        return 'low.png';
       default:
-        return Colors.green; // Default color (white)
+        return 'low.png';
     }
   }
 }

@@ -1,33 +1,16 @@
 import 'package:flutter/material.dart';
 
-import 'package:notpin/utils/db_helper.dart';
 import '../widgets/note_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.notes});
-  final notes;
+  final dynamic notes;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  // var _notesList = [];
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   _getNotes();
-  // }
-
-  // Future<void> _getNotes() async {
-  //   final res = await DBHelper.getAllNotes('notes_list');
-  //   setState(() {
-  //     _notesList = res.reversed.toList();
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,6 +26,7 @@ class _HomePageState extends State<HomePage> {
                 : const EdgeInsets.only(bottom: 0),
             child: NoteCard(
               key: ValueKey(widget.notes[index]['id']),
+              id: widget.notes[index]['id'],
               priority: widget.notes[index]['priority'],
               title: widget.notes[index]['title'],
               text: widget.notes[index]['description'],

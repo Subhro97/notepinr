@@ -38,7 +38,7 @@ class DBHelper {
 
   static Future<int> deleteNote(String table, int id) async {
     final db = await DBHelper.database();
-    final res = db.delete(table, where: 'id: ?', whereArgs: [id]);
+    final res = db.delete(table, where: 'id = ?', whereArgs: [id]);
     await db.close();
     return res;
   }
@@ -48,5 +48,39 @@ class DBHelper {
     final res = db.delete(table);
     await db.close();
     return res;
+  }
+
+  static Future<bool> getNotesPinStatus(String table, int id) async {
+    final db = await DBHelper.database();
+    final res = await db.query(
+      table,
+      columns: ['pinned'],
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    await db.close();
+
+    if (res.isNotEmpty) {
+      int pinnedStatus = res[0]['pinned'] as int;
+      return pinnedStatus == 1 ? true : false;
+    }
+
+    return false;
+  }
+
+  static Future<void> updatePinStatus(
+    String table,
+    int id,
+    int pinnedStatus,
+  ) async {
+    final db = await DBHelper.database();
+
+    await db.update(
+      table,
+      {'pinned': pinnedStatus},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    await db.close();
   }
 }

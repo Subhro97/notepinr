@@ -8,9 +8,11 @@ class NoteCard extends StatefulWidget {
   final String priority;
   final String title;
   final String text;
+  final int id;
 
   const NoteCard({
     super.key,
+    required this.id,
     required this.priority,
     required this.title,
     required this.text,
@@ -63,9 +65,14 @@ class _NoteCardState extends State<NoteCard> {
       enableDrag: false,
       backgroundColor: Colors.transparent,
       builder: ((context) {
-        return const BottomSheetContent(
+        return BottomSheetContent(
           height: 0.4,
-          child: EditContent(),
+          child: EditContent(
+            noteID: widget.id,
+            title: widget.title,
+            description: widget.text,
+            priority: widget.priority,
+          ),
         );
       }),
     );
@@ -82,7 +89,7 @@ class _NoteCardState extends State<NoteCard> {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2), // Shadow color
-            offset: Offset(0, 2), // Offset for the shadow
+            offset: const Offset(0, 2), // Offset for the shadow
             blurRadius: 2, // Blur radius
             spreadRadius: 0.5, // Spread radius
           ),
