@@ -1,22 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:notpin/models/note.dart';
 import 'package:notpin/utils/colors.dart';
 import 'package:notpin/widgets/filters_buttons.dart';
 import 'package:notpin/utils/db_helper.dart';
+import 'package:notpin/provider/notes_provider.dart';
+import 'package:notpin/utils/notification_api.dart';
 
-const uuid = Uuid();
+class AddNote extends ConsumerStatefulWidget {
+  const AddNote({
+    super.key,
+    this.noteID,
+    this.type = 'add',
+    this.title = '',
+    this.description = '',
+    this.pinStatus = false,
+    this.priority = 'High',
+    this.date,
+    this.time,
+  });
 
-class AddNote extends StatefulWidget {
-  const AddNote({super.key});
+  final int? noteID;
+  final String type;
+  final String title;
+  final String description;
+  final bool pinStatus;
+  final String priority;
+  final DateTime? date;
+  final TimeOfDay? time;
 
   @override
-  State<AddNote> createState() => _AddNoteState();
+  ConsumerState<AddNote> createState() => _AddNoteState();
 }
 
-class _AddNoteState extends State<AddNote> {
+class _AddNoteState extends ConsumerState<AddNote> {
   final _formKey = GlobalKey<FormState>();
 
   final _titleFocusNode = FocusNode();
@@ -24,6 +42,9 @@ class _AddNoteState extends State<AddNote> {
 
   final _dateController = TextEditingController();
   final _timeController = TextEditingController();
+  late TextEditingController _titleController;
+  late TextEditingController _desController;
+
   var _enteredTitle = '';
   var _enteredDesc = '';
 
@@ -32,6 +53,19 @@ class _AddNoteState extends State<AddNote> {
 
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _titleController = TextEditingController(text: widget.title);
+    _desController = TextEditingController(text: widget.description);
+    _enteredDesc = widget.description;
+    _pinned = widget.pinStatus;
+    _priority = widget.priority;
+    _selectedDate = widget.date;
+    _selectedTime = widget.time;
+  }
 
   @override
   void dispose() {
@@ -74,7 +108,8 @@ class _AddNoteState extends State<AddNote> {
 
   void _resetForm() {
     setState(() {
-      _formKey.currentState!.reset();
+      _titleController.text = '';
+      _desController.text = '';
       _pinned = false;
       _priority = 'High';
       _dateController.text = '';
@@ -83,22 +118,47 @@ class _AddNoteState extends State<AddNote> {
     FocusScope.of(context).unfocus();
   }
 
-  void _submitForm() {
+  void _submitForm(ctx) async {
     if (_formKey.currentState!.validate()) {
-      // Perform form submission
-      _formKey.currentState!.save();
+      _formKey.currentState!
+          .save(); // To ececute the save methods of the text form fields.
 
-      DBHelper.insert('notes_list', {
-        // "id": uuid.v4(),
+      Map<String, Object?> data = {
         "title": _enteredTitle,
         "description": _enteredDesc,
         "priority": _priority,
         "pinned": _pinned == true ? 1 : 0,
-        "date": _selectedDate!.toIso8601String(),
-        "time": _selectedTime.toString(),
-      });
+        "date":
+            _selectedDate != null ? _selectedDate!.toIso8601String() : 'null',
+        "time": _selectedTime != null ? _selectedTime.toString() : 'null',
+        "checked": 0,
+      };
 
-      Navigator.of(context).pop();
+      int? pinnedID;
+
+      if (widget.noteID != null) {
+        DBHelper.updateNote('notes_list', widget.noteID!, data);
+        NotificationAPI.removePinnedNotifications(widget
+            .noteID!); // Remove the previous notification with the same ID.
+      } else {
+        pinnedID = await DBHelper.insert('notes_list', data);
+      }
+
+      // If pinned option is selected in form, then pin notification
+      if (_pinned) {
+        NotificationAPI.showNotification(
+          widget.noteID == null ? pinnedID! : widget.noteID!,
+          _enteredTitle,
+          _enteredDesc,
+          _priority,
+        );
+      }
+
+      ref
+          .read(notesProvider.notifier)
+          .setNotesFromDB(); // To update the local state to the vale of the Database.
+
+      Navigator.pop(ctx);
     }
   }
 
@@ -111,9 +171,9 @@ class _AddNoteState extends State<AddNote> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'add note',
-            style: TextStyle(
+          title: Text(
+            widget.type.trim() == 'edit' ? 'edit note' : 'add note',
+            style: const TextStyle(
               color: ColorsLightTheme.txtColor,
             ),
           ),
@@ -133,6 +193,7 @@ class _AddNoteState extends State<AddNote> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextFormField(
+                    controller: _titleController,
                     decoration: const InputDecoration(
                       labelText: 'Title',
                     ),
@@ -159,6 +220,7 @@ class _AddNoteState extends State<AddNote> {
                   ),
                   const SizedBox(height: 16.0),
                   TextFormField(
+                    controller: _desController,
                     decoration: const InputDecoration(
                       labelText: 'Description',
                     ),
@@ -184,6 +246,7 @@ class _AddNoteState extends State<AddNote> {
                     children: [
                       Expanded(
                         child: TextFormField(
+                          // initialValue: _selectedDate.toString(),
                           decoration: const InputDecoration(
                             labelText: 'Date',
                           ),
@@ -195,6 +258,7 @@ class _AddNoteState extends State<AddNote> {
                       const SizedBox(width: 8.0),
                       Expanded(
                         child: TextFormField(
+                          // initialValue: _selectedTime.toString(),
                           decoration: const InputDecoration(
                             labelText: 'Time',
                           ),
@@ -362,8 +426,8 @@ class _AddNoteState extends State<AddNote> {
                   const SizedBox(height: 48.0),
                   FiltersButtons(
                     onReset: _resetForm,
-                    onExecute: _submitForm,
-                    executeTxt: 'ADD',
+                    onExecute: (() => _submitForm(context)),
+                    executeTxt: widget.type.trim() == 'edit' ? 'UPDATE' : 'ADD',
                   )
                 ],
               ),

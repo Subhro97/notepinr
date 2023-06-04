@@ -51,6 +51,5 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
         ],
       ),
     );
-    ;
   }
 }

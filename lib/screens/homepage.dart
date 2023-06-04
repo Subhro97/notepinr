@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/note_card.dart';
+import 'package:notpin/widgets/note_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.notes});

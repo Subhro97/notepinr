@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import "package:flutter/services.dart";
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:notpin/layout.dart';
 import 'package:notpin/utils/notification_api.dart';
+import 'package:notpin/screens/test_screen.dart';
 
 var lightColorScheme = ColorScheme.fromSeed(
   seedColor: const Color.fromRGBO(59, 130, 246, 1),
@@ -25,7 +29,19 @@ Future<void> main() async {
     ),
   );
 
-  runApp(const MyApp());
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.transparent.withOpacity(0.3),
+      systemNavigationBarDividerColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ),
+  );
+
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

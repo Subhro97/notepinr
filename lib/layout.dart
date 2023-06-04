@@ -1,51 +1,36 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
-import 'package:notpin/screens/homepage.dart';
-import 'package:notpin/utils/notification_api.dart';
+import 'package:animations/animations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notpin/provider/status_bar_provider.dart';
+
 import 'package:notpin/widgets/bottom_sheet_content.dart';
 import 'package:notpin/widgets/sort_filter_content.dart';
+
+import 'package:notpin/provider/notes_provider.dart';
+
+import 'package:notpin/utils/db_helper.dart';
+
+import 'package:notpin/screens/homepage.dart';
 import 'package:notpin/screens/add_note.dart';
 import 'package:notpin/screens/plans_page.dart';
 import 'package:notpin/screens/checked_page.dart';
 import 'package:notpin/screens/settings.dart';
-import 'package:notpin/utils/db_helper.dart';
-import 'package:notpin/utils/notification_api.dart';
 
-class Layout extends StatefulWidget {
+class Layout extends ConsumerStatefulWidget {
   const Layout({super.key});
 
   @override
-  State<Layout> createState() => _LayoutState();
+  ConsumerState<Layout> createState() => _LayoutState();
 }
 
-class _LayoutState extends State<Layout> {
+class _LayoutState extends ConsumerState<Layout> {
   int _selectedIndex = 0;
   var _notesList = [];
+  var _checkedList = [];
 
-  Future<void> _getNotes() async {
-    var res = await DBHelper.getAllNotes('notes_list');
-    print(res);
-    List<Map<String, Object?>> pinnedNotes =
-        res.where((note) => note['pinned'] == 1).toList();
-
-    print(pinnedNotes);
-
-    if (pinnedNotes.isNotEmpty) {
-      for (var i = 0; i < pinnedNotes.length; i++) {
-        NotificationAPI.showNotification(
-          pinnedNotes[i]['id'] as int,
-          pinnedNotes[i]['title'] as String,
-          pinnedNotes[i]['description'] as String,
-          pinnedNotes[i]['priority'] as String,
-        );
-      }
-    } else {
-      NotificationAPI.removeAllPinnedNotifications();
-    }
-    setState(() {
-      _notesList = res.reversed.toList();
-    });
+  void _getNotes() {
+    ref.read(notesProvider.notifier).setNotesFromDB();
   }
 
   @override
@@ -78,15 +63,33 @@ class _LayoutState extends State<Layout> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _screensList = [
+    final providerList =
+        ref.watch(notesProvider); //Getting the state set proider List
+
+    if (providerList.isNotEmpty) {
+      //Filtering the List as per checked status;
+      _notesList = (providerList[0]["unCheckedList"] as List).isNotEmpty
+          ? (providerList[0]["unCheckedList"] as List).reversed.toList()
+          : [];
+      _checkedList = (providerList[0]["checkedList"] as List).isNotEmpty
+          ? (providerList[0]["checkedList"] as List).reversed.toList()
+          : [];
+    } else {
+      _notesList = [];
+      _checkedList = [];
+    }
+
+    final List<Widget> screensList = [
       HomePage(
         notes: _notesList,
       ),
-      PlansPage(),
-      CheckedPage(),
-      Settings()
+      const PlansPage(),
+      CheckedPage(
+        checkedNotes: _checkedList,
+      ),
+      const Settings()
     ];
-
+    final isStatusBarThere = ref.watch(statusBarProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('notpin'),
@@ -105,7 +108,7 @@ class _LayoutState extends State<Layout> {
           secondaryAnimation: secondaryAnimation,
           child: child,
         ),
-        child: _screensList[_selectedIndex],
+        child: screensList[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -153,7 +156,7 @@ class _LayoutState extends State<Layout> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: ((context) => AddNote()),
+              builder: ((context) => const AddNote()),
             ),
           ).then((value) => _getNotes());
         },

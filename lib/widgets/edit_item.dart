@@ -18,7 +18,22 @@ class EditItem extends StatelessWidget {
         return value! ? Icons.push_pin : Icons.push_pin_outlined;
 
       case 'edit':
-        return Icons.edit;
+        return Icons.edit_outlined;
+
+      case 'delete':
+        return Icons.delete_outline;
+
+      case 'cancel':
+        return Icons.close_rounded;
+
+      case 'clone':
+        return Icons.content_copy;
+
+      case 'done':
+        return Icons.check;
+
+      case 'share':
+        return Icons.share_outlined;
 
       default:
         return Icons.device_hub;
@@ -32,6 +47,21 @@ class EditItem extends StatelessWidget {
 
       case 'edit':
         return 'Edit';
+
+      case 'delete':
+        return 'Delete';
+
+      case 'cancel':
+        return 'Cancel';
+
+      case 'clone':
+        return 'Clone';
+
+      case 'done':
+        return value! ? 'Mark as Undone' : 'Mark as done';
+
+      case 'share':
+        return 'Share';
 
       default:
         return 'Notpin';
