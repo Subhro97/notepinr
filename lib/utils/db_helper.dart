@@ -24,14 +24,12 @@ class DBHelper {
       data,
       conflictAlgorithm: sql.ConflictAlgorithm.replace,
     );
-    await db.close();
     return id;
   }
 
   static Future<List<Map<String, Object?>>> getAllNotes(String table) async {
     final db = await DBHelper.database();
     final res = await db.query(table);
-    await db.close();
     return res;
   }
 
@@ -39,21 +37,18 @@ class DBHelper {
       String table, int id) async {
     final db = await DBHelper.database();
     final res = await db.query(table, where: 'id = ?', whereArgs: [id]);
-    await db.close();
     return res;
   }
 
   static Future<int> deleteNote(String table, int id) async {
     final db = await DBHelper.database();
     final res = await db.delete(table, where: 'id = ?', whereArgs: [id]);
-    await db.close();
     return res;
   }
 
   static Future<int> deleteAllNotes(String table) async {
     final db = await DBHelper.database();
     final res = await db.delete(table);
-    await db.close();
     return res;
   }
 
@@ -66,7 +61,6 @@ class DBHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
-    await db.close();
 
     Map<String, bool> finalRes = {"pinned": false, "checked": false};
 
@@ -91,7 +85,6 @@ class DBHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
-    await db.close();
   }
 
   static Future<void> updateNote(
@@ -115,7 +108,6 @@ class DBHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
-    await db.close();
   }
 
   static Future<void> updateCheckedStatus(
@@ -131,6 +123,5 @@ class DBHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
-    await db.close();
   }
 }

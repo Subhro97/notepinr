@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notpin/provider/status_bar_provider.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:notpin/provider/notes_provider.dart';
 
@@ -84,7 +83,6 @@ class _NoteCardState extends ConsumerState<NoteCard> {
   }
 
   void _shareNoteHandler() async {
-    ref.read(statusBarProvider.notifier).setStatusBarHeight();
     Navigator.pop(context);
     Share.share('${widget.title}\n\n${widget.text}\n\n~ From Notpin');
   }

@@ -29,13 +29,13 @@ Future<void> main() async {
     ),
   );
 
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.transparent.withOpacity(0.3),
-      systemNavigationBarDividerColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.light,
-    ),
-  );
+  // SystemChrome.setSystemUIOverlayStyle(
+  //   SystemUiOverlayStyle(
+  //     systemNavigationBarColor: Colors.transparent.withOpacity(0.3),
+  //     systemNavigationBarDividerColor: Colors.transparent,
+  //     systemNavigationBarIconBrightness: Brightness.light,
+  //   ),
+  // );
 
   runApp(
     const ProviderScope(

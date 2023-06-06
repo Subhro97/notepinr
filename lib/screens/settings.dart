@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
 
+import 'package:notpin/widgets/settings_about.dart';
+import 'package:notpin/widgets/settings_main.dart';
+
 class Settings extends StatefulWidget {
   const Settings({super.key});
 
@@ -10,8 +13,13 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(child: Text('settings')),
+    return SingleChildScrollView(
+      child: Column(
+        children: const [
+          SettingsMain(),
+          SettingsAbout(),
+        ],
+      ),
     );
   }
 }

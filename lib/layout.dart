@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:animations/animations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notpin/provider/status_bar_provider.dart';
 
 import 'package:notpin/widgets/bottom_sheet_content.dart';
 import 'package:notpin/widgets/sort_filter_content.dart';
 
 import 'package:notpin/provider/notes_provider.dart';
 
-import 'package:notpin/utils/db_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:notpin/screens/homepage.dart';
 import 'package:notpin/screens/add_note.dart';
@@ -36,7 +35,7 @@ class _LayoutState extends ConsumerState<Layout> {
   @override
   void initState() {
     super.initState();
-    // DBHelper.deleteAllNotes('notes_list');
+    // SharedPreferences.getInstance().then((prefs) => prefs.remove('sort'));
     _getNotes();
   }
 
@@ -69,10 +68,10 @@ class _LayoutState extends ConsumerState<Layout> {
     if (providerList.isNotEmpty) {
       //Filtering the List as per checked status;
       _notesList = (providerList[0]["unCheckedList"] as List).isNotEmpty
-          ? (providerList[0]["unCheckedList"] as List).reversed.toList()
+          ? (providerList[0]["unCheckedList"] as List)
           : [];
       _checkedList = (providerList[0]["checkedList"] as List).isNotEmpty
-          ? (providerList[0]["checkedList"] as List).reversed.toList()
+          ? (providerList[0]["checkedList"] as List)
           : [];
     } else {
       _notesList = [];
@@ -89,7 +88,7 @@ class _LayoutState extends ConsumerState<Layout> {
       ),
       const Settings()
     ];
-    final isStatusBarThere = ref.watch(statusBarProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('notpin'),
@@ -151,21 +150,23 @@ class _LayoutState extends ConsumerState<Layout> {
         selectedFontSize: 12,
         onTap: _onItemTapped,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: ((context) => const AddNote()),
-            ),
-          ).then((value) => _getNotes());
-        },
-        elevation: 5,
-        backgroundColor: const Color.fromRGBO(59, 130, 246, 1),
-        foregroundColor: const Color.fromRGBO(255, 255, 255, 1),
-        shape: const CircleBorder(),
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: _selectedIndex == 0
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: ((context) => const AddNote()),
+                  ),
+                ).then((value) => _getNotes());
+              },
+              elevation: 5,
+              backgroundColor: const Color.fromRGBO(59, 130, 246, 1),
+              foregroundColor: const Color.fromRGBO(255, 255, 255, 1),
+              shape: const CircleBorder(),
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }

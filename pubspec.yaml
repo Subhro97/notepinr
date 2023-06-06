@@ -44,7 +44,11 @@ dependencies:
   uuid: ^3.0.7
   flutter_local_notifications: ^14.1.0
   flutter_riverpod: ^2.3.6
-  share: ^2.0.4
+  shared_preferences: ^2.1.1
+  store_redirect: ^2.0.1
+  share_plus: ^7.0.2
+  url_launcher: ^6.1.11
+  device_info_plus: ^9.0.2
 
 dev_dependencies:
   flutter_test:

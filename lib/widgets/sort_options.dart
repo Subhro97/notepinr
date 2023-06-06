@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:notpin/utils/colors.dart';
 
 class SortOptions extends StatelessWidget {
-  const SortOptions({super.key});
+  const SortOptions({super.key, required this.sortType, required this.onSort});
+
+  final String? sortType;
+  final void Function(String name) onSort;
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +37,13 @@ class SortOptions extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.radio_button_checked,
+                onPressed: () {
+                  onSort('Priority');
+                },
+                icon: Icon(
+                  sortType == 'Priority' || sortType == null
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_unchecked,
                   color: ColorsLightTheme.primaryColor,
                 ),
               ),
@@ -56,9 +63,13 @@ class SortOptions extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.radio_button_unchecked,
+                onPressed: () {
+                  onSort('FirstToLast');
+                },
+                icon: Icon(
+                  sortType == 'FirstToLast'
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_unchecked,
                   color: ColorsLightTheme.primaryColor,
                 ),
               ),
@@ -78,15 +89,19 @@ class SortOptions extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.radio_button_unchecked,
+                onPressed: () {
+                  onSort('LastToFirst');
+                },
+                icon: Icon(
+                  sortType == 'LastToFirst'
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_unchecked,
                   color: ColorsLightTheme.primaryColor,
                 ),
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
