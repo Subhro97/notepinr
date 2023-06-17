@@ -16,7 +16,11 @@ class _HomePageState extends State<HomePage> {
     return Container(
       width: double.infinity,
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        padding: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+          bottom: 16,
+        ),
         itemCount: widget.notes.length,
         itemBuilder: ((context, index) {
           return Container(

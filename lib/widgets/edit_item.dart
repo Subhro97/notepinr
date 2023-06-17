@@ -70,17 +70,24 @@ class EditItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool theme = Theme.of(context).brightness == Brightness.dark;
+
     return ListTile(
       leading: Icon(
         _getIcon(type, value),
         size: 24,
       ),
-      iconColor: Colors.black,
+      iconColor:
+          !theme ? Colors.black : const Color.fromRGBO(250, 250, 250, 0.8),
       title: Text(
         _getTitle(type, value),
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w700,
+          fontFamily: 'Oxygen',
+          color: !theme
+              ? const Color.fromRGBO(0, 0, 0, 1)
+              : const Color.fromRGBO(250, 250, 250, 0.8),
         ),
       ),
       horizontalTitleGap: -5,

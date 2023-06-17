@@ -16,9 +16,11 @@ class SettingsListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool theme = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: onTap,
       child: Row(
+        mainAxisSize: MainAxisSize.max,
         children: [
           Icon(icon),
           const SizedBox(
@@ -29,10 +31,13 @@ class SettingsListItem extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
-                  color: Color.fromRGBO(0, 0, 0, 1),
+                style: TextStyle(
+                  color: !theme
+                      ? const Color.fromRGBO(0, 0, 0, 1)
+                      : const Color.fromRGBO(250, 250, 250, 0.8),
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
+                  // fontFamily: 'Oxygen',
                 ),
               ),
               const SizedBox(
@@ -40,10 +45,13 @@ class SettingsListItem extends StatelessWidget {
               ),
               Text(
                 subTitle,
-                style: const TextStyle(
-                  color: Color.fromRGBO(66, 66, 66, 1),
+                style: TextStyle(
+                  color: !theme
+                      ? const Color.fromRGBO(66, 66, 66, 1)
+                      : const Color.fromRGBO(250, 250, 250, 0.6),
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
+                  // fontFamily: 'Oxygen',
                 ),
               ),
             ],

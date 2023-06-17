@@ -1,3 +1,4 @@
+import 'package:notpin/utils/notification_api.dart';
 import 'package:store_redirect/store_redirect.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -54,5 +55,9 @@ class SettingsHelpers {
 
   static void deleteAllNotes() {
     DBHelper.deleteAllNotes('notes_list');
+  }
+
+  static void removeAllPins() {
+    NotificationAPI.removeAllPinnedNotifications();
   }
 }

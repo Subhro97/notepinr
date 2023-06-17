@@ -12,6 +12,7 @@ class SettingsContainerLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool theme = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(
@@ -26,7 +27,9 @@ class SettingsContainerLayout extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
-              color: const Color.fromRGBO(235, 242, 245, 1),
+              color: !theme
+                  ? const Color.fromRGBO(235, 242, 245, 1)
+                  : const Color.fromRGBO(36, 36, 36, 1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -48,10 +51,13 @@ class SettingsContainerLayout extends StatelessWidget {
                     ),
                     Text(
                       heading,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: !theme
+                            ? Colors.black
+                            : const Color.fromRGBO(250, 250, 250, 0.8),
+                        // fontFamily: 'Oxygen',
                       ),
                     )
                   ],

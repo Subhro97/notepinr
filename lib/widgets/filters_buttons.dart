@@ -16,6 +16,7 @@ class FiltersButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool theme = Theme.of(context).brightness == Brightness.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -23,8 +24,12 @@ class FiltersButtons extends StatelessWidget {
           onPressed: onReset,
           style: ElevatedButton.styleFrom(
             elevation: 0,
-            backgroundColor: ColorsLightTheme.primaryVariantColor,
-            foregroundColor: ColorsLightTheme.primaryColor,
+            backgroundColor: !theme
+                ? ColorsLightTheme.primaryVariantColor
+                : const Color.fromARGB(204, 66, 66, 66),
+            foregroundColor: !theme
+                ? ColorsLightTheme.primaryColor
+                : const Color.fromRGBO(250, 250, 250, 0.87),
             minimumSize: const Size(126, 40),
             alignment: Alignment.center,
             textStyle: const TextStyle(
@@ -41,8 +46,12 @@ class FiltersButtons extends StatelessWidget {
           onPressed: onExecute,
           style: ElevatedButton.styleFrom(
             elevation: 1,
-            backgroundColor: ColorsLightTheme.primaryColor,
-            foregroundColor: ColorsLightTheme.primaryTxtColor,
+            backgroundColor: !theme
+                ? ColorsLightTheme.primaryColor
+                : ColorsDarkTheme.primaryColor,
+            foregroundColor: !theme
+                ? ColorsLightTheme.primaryTxtColor
+                : ColorsDarkTheme.primaryTxtColor,
             minimumSize: const Size(126, 40),
             alignment: Alignment.center,
             textStyle: const TextStyle(

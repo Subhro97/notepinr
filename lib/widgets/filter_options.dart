@@ -13,6 +13,7 @@ class FilterOptions extends StatelessWidget {
   final void Function(String name) onFilter;
   @override
   Widget build(BuildContext context) {
+    bool theme = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -47,7 +48,9 @@ class FilterOptions extends StatelessWidget {
                     filterType != 'Pinned'
                         ? Icons.radio_button_unchecked
                         : Icons.radio_button_checked,
-                    color: ColorsLightTheme.primaryColor,
+                    color: !theme
+                        ? ColorsLightTheme.primaryColor
+                        : ColorsDarkTheme.primaryColor,
                   ))
             ],
           ),

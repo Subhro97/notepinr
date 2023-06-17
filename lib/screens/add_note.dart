@@ -164,6 +164,7 @@ class _AddNoteState extends ConsumerState<AddNote> {
 
   @override
   Widget build(BuildContext context) {
+    bool theme = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: () {
         // Unfocus text fields when tapping outside
@@ -173,15 +174,19 @@ class _AddNoteState extends ConsumerState<AddNote> {
         appBar: AppBar(
           title: Text(
             widget.type.trim() == 'edit' ? 'edit note' : 'add note',
-            style: const TextStyle(
-              color: ColorsLightTheme.txtColor,
+            style: TextStyle(
+              color: !theme
+                  ? ColorsLightTheme.txtColor
+                  : const Color.fromRGBO(250, 250, 250, 0.87),
             ),
           ),
+          toolbarHeight: 64,
           titleSpacing: 16,
           centerTitle: false,
-          backgroundColor: const Color.fromRGBO(249, 249, 249, 1),
+          backgroundColor: !theme ? Colors.white : Colors.black,
           scrolledUnderElevation: 0,
         ),
+        backgroundColor: !theme ? Colors.white : Colors.black,
         body: SingleChildScrollView(
           child: Container(
             width: double.infinity,
@@ -321,7 +326,10 @@ class _AddNoteState extends ConsumerState<AddNote> {
                                 borderRadius: BorderRadius.circular(4.0),
                                 border: Border.all(
                                   color: _priority == 'High'
-                                      ? const Color.fromRGBO(0, 0, 0, 1)
+                                      ? !theme
+                                          ? const Color.fromRGBO(0, 0, 0, 1)
+                                          : const Color.fromRGBO(
+                                              250, 250, 250, 0.87)
                                       : Colors.transparent,
                                   width: 1.0,
                                 ),
@@ -334,7 +342,10 @@ class _AddNoteState extends ConsumerState<AddNote> {
                               'High',
                               style: TextStyle(
                                 color: _priority == 'High'
-                                    ? const Color.fromRGBO(0, 0, 0, 1)
+                                    ? !theme
+                                        ? const Color.fromRGBO(0, 0, 0, 1)
+                                        : const Color.fromRGBO(
+                                            250, 250, 250, 0.87)
                                     : const Color.fromRGBO(128, 128, 128, 1),
                                 fontSize: 12.0,
                                 fontWeight: FontWeight.bold,
@@ -360,7 +371,10 @@ class _AddNoteState extends ConsumerState<AddNote> {
                                 borderRadius: BorderRadius.circular(4.0),
                                 border: Border.all(
                                   color: _priority == 'Medium'
-                                      ? const Color.fromRGBO(0, 0, 0, 1)
+                                      ? !theme
+                                          ? const Color.fromRGBO(0, 0, 0, 1)
+                                          : const Color.fromRGBO(
+                                              250, 250, 250, 0.87)
                                       : Colors.transparent,
                                   width: 1.0,
                                 ),
@@ -373,7 +387,10 @@ class _AddNoteState extends ConsumerState<AddNote> {
                               'Medium',
                               style: TextStyle(
                                 color: _priority == 'Medium'
-                                    ? const Color.fromRGBO(0, 0, 0, 1)
+                                    ? !theme
+                                        ? const Color.fromRGBO(0, 0, 0, 1)
+                                        : const Color.fromRGBO(
+                                            250, 250, 250, 0.87)
                                     : const Color.fromRGBO(128, 128, 128, 1),
                                 fontSize: 12.0,
                                 fontWeight: FontWeight.bold,
@@ -399,7 +416,10 @@ class _AddNoteState extends ConsumerState<AddNote> {
                                 borderRadius: BorderRadius.circular(4.0),
                                 border: Border.all(
                                   color: _priority == 'Low'
-                                      ? const Color.fromRGBO(0, 0, 0, 1)
+                                      ? !theme
+                                          ? const Color.fromRGBO(0, 0, 0, 1)
+                                          : const Color.fromRGBO(
+                                              250, 250, 250, 0.87)
                                       : Colors.transparent,
                                   width: 1.0,
                                 ),
@@ -412,7 +432,10 @@ class _AddNoteState extends ConsumerState<AddNote> {
                               'Low',
                               style: TextStyle(
                                 color: _priority == 'Low'
-                                    ? const Color.fromRGBO(0, 0, 0, 1)
+                                    ? !theme
+                                        ? const Color.fromRGBO(0, 0, 0, 1)
+                                        : const Color.fromRGBO(
+                                            250, 250, 250, 0.87)
                                     : const Color.fromRGBO(128, 128, 128, 1),
                                 fontSize: 12.0,
                                 fontWeight: FontWeight.bold,
@@ -428,7 +451,8 @@ class _AddNoteState extends ConsumerState<AddNote> {
                     onReset: _resetForm,
                     onExecute: (() => _submitForm(context)),
                     executeTxt: widget.type.trim() == 'edit' ? 'UPDATE' : 'ADD',
-                  )
+                  ),
+                  const SizedBox(height: 48.0),
                 ],
               ),
             ),

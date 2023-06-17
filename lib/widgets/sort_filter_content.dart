@@ -72,11 +72,14 @@ class _SortFilterContentState extends ConsumerState<SortFilterContent> {
 
   @override
   Widget build(BuildContext context) {
+    bool theme = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
-      decoration: const BoxDecoration(
-        color: ColorsLightTheme.backgroundColor,
-        borderRadius: BorderRadius.vertical(
+      decoration: BoxDecoration(
+        color: !theme
+            ? ColorsLightTheme.backgroundColor
+            : const Color.fromRGBO(36, 36, 36, 1),
+        borderRadius: const BorderRadius.vertical(
           top: Radius.circular(16),
         ),
       ),
@@ -94,7 +97,11 @@ class _SortFilterContentState extends ConsumerState<SortFilterContent> {
                 sortType: sortType,
                 onSort: selectSortOption,
               ),
-              const Divider(),
+              Divider(
+                color: theme
+                    ? const Color.fromRGBO(143, 150, 153, 1)
+                    : const Color.fromRGBO(196, 204, 208, 1),
+              ),
               FilterOptions(
                 filterType: filterType,
                 onFilter: selectFilterOption,

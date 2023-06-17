@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:notpin/utils/file_path.dart';
 
 class NotificationAPI {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin(); // Initializing the Notification Plugin
 
   static Future<void> showNotification(
     int id,
@@ -13,7 +15,8 @@ class NotificationAPI {
     String priority,
   ) async {
     var subPath = _getPriorityIcon(priority);
-    var path = await FilePath.getFilePath('assets/images/$subPath', subPath);
+    var path = await FilePath.getFilePath('assets/images/$subPath',
+        subPath); // Getting the path of the priority icon stored in somewhere in the device
 
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
@@ -26,7 +29,7 @@ class NotificationAPI {
       autoCancel: false,
       enableVibration: false,
       largeIcon: FilePathAndroidBitmap(path),
-    );
+    ); // Customizing the Notification
 
     NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);

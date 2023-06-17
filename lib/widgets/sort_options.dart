@@ -10,6 +10,7 @@ class SortOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool theme = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -23,7 +24,11 @@ class SortOptions extends StatelessWidget {
             ),
           ),
         ),
-        const Divider(),
+        Divider(
+          color: theme
+              ? const Color.fromRGBO(143, 150, 153, 1)
+              : const Color.fromRGBO(196, 204, 208, 1),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
@@ -44,7 +49,9 @@ class SortOptions extends StatelessWidget {
                   sortType == 'Priority' || sortType == null
                       ? Icons.radio_button_checked
                       : Icons.radio_button_unchecked,
-                  color: ColorsLightTheme.primaryColor,
+                  color: !theme
+                      ? ColorsLightTheme.primaryColor
+                      : ColorsDarkTheme.primaryColor,
                 ),
               ),
             ],
@@ -70,7 +77,9 @@ class SortOptions extends StatelessWidget {
                   sortType == 'FirstToLast'
                       ? Icons.radio_button_checked
                       : Icons.radio_button_unchecked,
-                  color: ColorsLightTheme.primaryColor,
+                  color: !theme
+                      ? ColorsLightTheme.primaryColor
+                      : ColorsDarkTheme.primaryColor,
                 ),
               ),
             ],
@@ -96,7 +105,9 @@ class SortOptions extends StatelessWidget {
                   sortType == 'LastToFirst'
                       ? Icons.radio_button_checked
                       : Icons.radio_button_unchecked,
-                  color: ColorsLightTheme.primaryColor,
+                  color: !theme
+                      ? ColorsLightTheme.primaryColor
+                      : ColorsDarkTheme.primaryColor,
                 ),
               ),
             ],
