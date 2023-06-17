@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notpin/screens/custom_page_transition.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:notpin/utils/colors.dart';
 
 import 'package:notpin/widgets/bottom_sheet_content.dart';
@@ -97,50 +98,64 @@ class _LayoutState extends ConsumerState<Layout> {
 
     bool theme = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
-      appBar: AppBarCustom(
-        selectedIndex: _selectedIndex,
-        showFilterModal: (ctx) => _showFilterModal(ctx),
-        theme: theme,
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        systemNavigationBarColor: !theme ? Colors.white : Colors.black,
+        systemNavigationBarDividerColor: !theme
+            ? Colors.grey.withOpacity(0.28)
+            : const Color.fromARGB(255, 46, 46, 46).withOpacity(1),
+        systemNavigationBarIconBrightness:
+            !theme ? Brightness.dark : Brightness.light,
       ),
-      backgroundColor: !theme ? Colors.white : Colors.black,
-      body: Column(
-        children: [
-          _selectedIndex == 0
-              ? const Padding(
-                  padding: EdgeInsets.only(
-                      left: 16.0, right: 16.0, top: 0.0, bottom: 16.0),
-                  child: SearchBar(),
-                )
-              : const SizedBox(),
-          Expanded(child: screensList[_selectedIndex]),
-        ],
+      child: Scaffold(
+        appBar: AppBarCustom(
+          selectedIndex: _selectedIndex,
+          showFilterModal: (ctx) => _showFilterModal(ctx),
+          theme: theme,
+        ),
+        backgroundColor: !theme ? Colors.white : Colors.black,
+        body: Column(
+          children: [
+            _selectedIndex == 0
+                ? const Padding(
+                    padding: EdgeInsets.only(
+                        left: 16.0, right: 16.0, top: 0.0, bottom: 16.0),
+                    child: SearchBar(),
+                  )
+                : const SizedBox(),
+            Expanded(child: screensList[_selectedIndex]),
+          ],
+        ),
+        bottomNavigationBar: BottomBar(
+          selectedIndex: _selectedIndex,
+          onItemTap: _onItemTapped,
+        ),
+        floatingActionButton: _selectedIndex == 0
+            ? FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      curve: Curves.linear,
+                      type: PageTransitionType.rightToLeft,
+                      duration: Duration(milliseconds: 100),
+                      reverseDuration: Duration(milliseconds: 100),
+                      child: const AddNote(),
+                    ),
+                  ).then((value) => _getNotes());
+                },
+                elevation: 5,
+                backgroundColor: !theme
+                    ? const Color.fromRGBO(59, 130, 246, 1)
+                    : const Color.fromRGBO(97, 150, 234, 1),
+                foregroundColor: !theme
+                    ? const Color.fromRGBO(255, 255, 255, 1)
+                    : const Color.fromRGBO(10, 54, 123, 1),
+                shape: const CircleBorder(),
+                child: const Icon(Icons.add),
+              )
+            : null,
       ),
-      bottomNavigationBar: BottomBar(
-        selectedIndex: _selectedIndex,
-        onItemTap: _onItemTapped,
-      ),
-      floatingActionButton: _selectedIndex == 0
-          ? FloatingActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: ((context) => const AddNote()),
-                  ),
-                ).then((value) => _getNotes());
-              },
-              elevation: 5,
-              backgroundColor: !theme
-                  ? const Color.fromRGBO(59, 130, 246, 1)
-                  : const Color.fromRGBO(97, 150, 234, 1),
-              foregroundColor: !theme
-                  ? const Color.fromRGBO(255, 255, 255, 1)
-                  : const Color.fromRGBO(10, 54, 123, 1),
-              shape: const CircleBorder(),
-              child: const Icon(Icons.add),
-            )
-          : null,
     );
   }
 }

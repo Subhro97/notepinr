@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:notpin/utils/colors.dart';
 
-class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
+class AppBarCustom extends StatefulWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
@@ -17,8 +18,13 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
   final void Function(BuildContext ctx) showFilterModal;
   final bool theme;
 
+  @override
+  State<AppBarCustom> createState() => _AppBarCustomState();
+}
+
+class _AppBarCustomState extends State<AppBarCustom> {
   String get pageTitleGetter {
-    switch (selectedIndex) {
+    switch (widget.selectedIndex) {
       case (0):
         return 'notepinr';
       case (1):
@@ -47,14 +53,14 @@ class AppBarCustom extends StatelessWidget implements PreferredSizeWidget {
               color: ColorsLightTheme.primaryColor,
             ),
           ),
-          backgroundColor: !theme ? Colors.white : Colors.black,
+          backgroundColor: !widget.theme ? Colors.white : Colors.black,
           toolbarHeight: 64,
           centerTitle: false,
           scrolledUnderElevation: 0.0,
-          actions: selectedIndex == 0
+          actions: widget.selectedIndex == 0
               ? <Widget>[
                   IconButton(
-                    onPressed: () => showFilterModal(context),
+                    onPressed: () => widget.showFilterModal(context),
                     icon: const Icon(Icons.filter_list),
                     // color: const Color.fromRGBO(255, 255, 255, 1),
                   )

@@ -6,9 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:notpin/layout.dart';
 import 'package:notpin/provider/theme_provider.dart';
-import 'package:notpin/screens/search_note.dart';
 import 'package:notpin/utils/notification_api.dart';
-import 'package:notpin/screens/custom_page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 var lightColorScheme = ColorScheme.fromSeed(
@@ -32,14 +30,6 @@ Future<void> main() async {
           '@mipmap/ic_launcher'), // Replace with your app icon name
     ),
   );
-
-  // SystemChrome.setSystemUIOverlayStyle(
-  //   SystemUiOverlayStyle(
-  //     systemNavigationBarColor: Colors.transparent.withOpacity(0.3),
-  //     systemNavigationBarDividerColor: Colors.transparent,
-  //     systemNavigationBarIconBrightness: Brightness.light,
-  //   ),
-  // );
 
   runApp(
     const ProviderScope(

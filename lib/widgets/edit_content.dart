@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:notpin/utils/db_helper.dart';
 import 'package:notpin/utils/notification_api.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'package:notpin/screens/add_note.dart';
 
@@ -93,8 +94,12 @@ class _EditContentState extends State<EditContent> {
 
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => AddNote(
+      PageTransition(
+        curve: Curves.linear,
+        type: PageTransitionType.rightToLeft,
+        duration: Duration(milliseconds: 300),
+        reverseDuration: Duration(milliseconds: 300),
+        child: AddNote(
           type: 'edit',
           noteID: widget.noteID,
           title: res[0]['title'],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:page_transition/page_transition.dart';
+
 import 'package:notpin/screens/search_note.dart';
 
 class SearchBar extends StatelessWidget {
@@ -28,8 +30,9 @@ class SearchBar extends StatelessWidget {
           onTap: isReadOnly
               ? () => Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (ctx) => const SearchNote(),
+                    PageTransition(
+                      type: PageTransitionType.fade,
+                      child: const SearchNote(),
                     ),
                   )
               : null,
