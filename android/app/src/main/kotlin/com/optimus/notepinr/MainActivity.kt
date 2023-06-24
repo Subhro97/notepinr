@@ -1,4 +1,4 @@
-package com.example.notpin
+package com.optimus.notepinr
 
 import io.flutter.embedding.android.FlutterActivity
 

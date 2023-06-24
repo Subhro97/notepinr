@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:notpin/utils/colors.dart';
-
 class BottomSheetContent extends StatefulWidget {
   final Widget child;
   final double height;
@@ -27,7 +25,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
             width: 40,
             height: 40,
             decoration: const BoxDecoration(
-              color: ColorsLightTheme.txtColor,
+              color: Color.fromARGB(255, 18, 18, 18),
               borderRadius: BorderRadius.all(
                 Radius.circular(40),
               ),
@@ -36,10 +34,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              icon: const Icon(
-                Icons.close,
-                color: Color.fromRGBO(250, 250, 250, 1),
-              ),
+              icon: const Icon(Icons.close, color: Colors.white70),
             ),
           ),
           const SizedBox(

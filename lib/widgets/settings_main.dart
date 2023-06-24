@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:notpin/provider/notes_provider.dart';
-import 'package:notpin/provider/theme_provider.dart';
+import 'package:notepinr/provider/notes_provider.dart';
+import 'package:notepinr/provider/theme_provider.dart';
 
-import 'package:notpin/widgets/settings_container_layout.dart';
-import 'package:notpin/widgets/settings_list_item.dart';
+import 'package:notepinr/widgets/settings_container_layout.dart';
+import 'package:notepinr/widgets/settings_list_item.dart';
 
-import 'package:notpin/helpers/settings_helpers.dart';
+import 'package:notepinr/helpers/settings_helpers.dart';
 
 class SettingsMain extends ConsumerStatefulWidget {
   const SettingsMain({super.key});

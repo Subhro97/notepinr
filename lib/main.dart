@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import "package:flutter/services.dart";
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:notpin/layout.dart';
-import 'package:notpin/provider/theme_provider.dart';
-import 'package:notpin/utils/notification_api.dart';
+import 'package:notepinr/layout.dart';
+import 'package:notepinr/provider/theme_provider.dart';
+import 'package:notepinr/utils/notification_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 var lightColorScheme = ColorScheme.fromSeed(
@@ -122,7 +121,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return theme == null
         ? MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Notpin',
+            title: 'notepinr',
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: ThemeMode.system,
@@ -130,7 +129,7 @@ class _MyAppState extends ConsumerState<MyApp> {
           )
         : MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Notpin',
+            title: 'notepinr',
             theme: theme ? lightTheme : darkTheme,
             home: const Layout(),
           );

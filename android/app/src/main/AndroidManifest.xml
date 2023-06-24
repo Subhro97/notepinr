@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.notpin">
+    package="com.optimus.notepinr">
    <application
-        android:label="notpin"
+        android:label="Notepinr"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

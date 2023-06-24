@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:notpin/widgets/settings_container_layout.dart';
-import 'package:notpin/widgets/settings_list_item.dart';
+import 'package:notepinr/widgets/settings_container_layout.dart';
+import 'package:notepinr/widgets/settings_list_item.dart';
 
-import 'package:notpin/helpers/settings_helpers.dart';
+import 'package:notepinr/helpers/settings_helpers.dart';
 
 class SettingsAbout extends StatelessWidget {
   const SettingsAbout({super.key});

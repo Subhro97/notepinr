@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:notpin/provider/notes_provider.dart';
+import 'package:notepinr/provider/notes_provider.dart';
 
-import 'package:notpin/widgets/sort_options.dart';
-import 'package:notpin/widgets/filter_options.dart';
-import 'package:notpin/widgets/filters_buttons.dart';
+import 'package:notepinr/widgets/sort_options.dart';
+import 'package:notepinr/widgets/filter_options.dart';
+import 'package:notepinr/widgets/filters_buttons.dart';
 
-import 'package:notpin/utils/colors.dart';
+import 'package:notepinr/utils/colors.dart';
 
 class SortFilterContent extends ConsumerStatefulWidget {
   const SortFilterContent({super.key});

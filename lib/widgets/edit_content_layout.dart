@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:notpin/utils/colors.dart';
+import 'package:notepinr/utils/colors.dart';
 
 class EditContentLayout extends StatelessWidget {
   const EditContentLayout({super.key, required this.itemList});

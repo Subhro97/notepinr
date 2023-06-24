@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notpin/provider/notes_provider.dart';
+import 'package:notepinr/provider/notes_provider.dart';
 
-import 'package:notpin/widgets/note_card.dart';
-import 'package:notpin/widgets/search_bar.dart';
+import 'package:notepinr/widgets/note_card.dart';
+import 'package:notepinr/widgets/search_bar_custom.dart';
 
 class SearchNote extends ConsumerStatefulWidget {
   const SearchNote({super.key});
@@ -68,7 +68,7 @@ class _SearchNoteState extends ConsumerState<SearchNote> {
                     ),
                   ),
                   Expanded(
-                    child: SearchBar(
+                    child: SearchBarCustom(
                       isReadOnly: false,
                       onChange: searchHandler,
                     ),

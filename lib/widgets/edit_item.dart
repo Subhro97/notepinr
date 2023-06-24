@@ -90,7 +90,7 @@ class EditItem extends StatelessWidget {
               : const Color.fromRGBO(250, 250, 250, 0.8),
         ),
       ),
-      horizontalTitleGap: -5,
+      horizontalTitleGap: 8,
       dense: true,
       contentPadding: const EdgeInsets.all(0),
       onTap: onTapHandler,

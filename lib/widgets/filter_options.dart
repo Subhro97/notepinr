@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:notpin/utils/colors.dart';
+import 'package:notepinr/utils/colors.dart';
 
 class FilterOptions extends StatelessWidget {
   const FilterOptions({
@@ -27,7 +27,11 @@ class FilterOptions extends StatelessWidget {
             ),
           ),
         ),
-        const Divider(),
+        Divider(
+          color: theme
+              ? const Color.fromRGBO(143, 150, 153, 1)
+              : const Color.fromRGBO(196, 204, 208, 1),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 16,
@@ -43,39 +47,19 @@ class FilterOptions extends StatelessWidget {
                 ),
               ),
               IconButton(
-                  onPressed: () => onFilter('Pinned'),
-                  icon: Icon(
-                    filterType != 'Pinned'
-                        ? Icons.radio_button_unchecked
-                        : Icons.radio_button_checked,
-                    color: !theme
-                        ? ColorsLightTheme.primaryColor
-                        : ColorsDarkTheme.primaryColor,
-                  ))
+                onPressed: () => onFilter('Pinned'),
+                icon: Icon(
+                  filterType != 'Pinned'
+                      ? Icons.radio_button_unchecked
+                      : Icons.radio_button_checked,
+                  color: !theme
+                      ? ColorsLightTheme.primaryColor
+                      : ColorsDarkTheme.primaryColor,
+                ),
+              )
             ],
           ),
         ),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 16),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children: [
-        //       const Text(
-        //         'Scheduled Pins',
-        //         style: TextStyle(
-        //           fontSize: 14,
-        //           fontWeight: FontWeight.w700,
-        //         ),
-        //       ),
-        //       IconButton(
-        //           onPressed: () {},
-        //           icon: const Icon(
-        //             Icons.radio_button_unchecked,
-        //             color: ColorsLightTheme.primaryColor,
-        //           ))
-        //     ],
-        //   ),
-        // )
       ],
     );
   }

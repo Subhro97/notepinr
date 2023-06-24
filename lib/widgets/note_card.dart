@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'package:notpin/provider/notes_provider.dart';
+import 'package:notepinr/provider/notes_provider.dart';
 
-import 'package:notpin/screens/add_note.dart';
+import 'package:notepinr/screens/add_note.dart';
 
-import 'package:notpin/widgets/bottom_sheet_content.dart';
-import 'package:notpin/widgets/edit_content.dart';
-import 'package:notpin/widgets/edit_item.dart';
-import 'package:notpin/widgets/edit_content_layout.dart';
-import 'package:notpin/widgets/note_card_layout.dart';
+import 'package:notepinr/widgets/bottom_sheet_content.dart';
+import 'package:notepinr/widgets/edit_content.dart';
+import 'package:notepinr/widgets/edit_item.dart';
+import 'package:notepinr/widgets/edit_content_layout.dart';
+import 'package:notepinr/widgets/note_card_layout.dart';
 
-import 'package:notpin/utils/db_helper.dart';
-import 'package:notpin/utils/notification_api.dart';
+import 'package:notepinr/utils/db_helper.dart';
+import 'package:notepinr/utils/notification_api.dart';
 
 class NoteCard extends ConsumerStatefulWidget {
   final String priority;
@@ -84,7 +84,7 @@ class _NoteCardState extends ConsumerState<NoteCard> {
 
   void _shareNoteHandler() async {
     Navigator.pop(context);
-    Share.share('${widget.title}\n\n${widget.text}\n\n~ From Notpin');
+    Share.share('${widget.title}\n\n${widget.text}\n\n~ From notepinr');
   }
 
   // Pushes the Delete Modal screen after removing the edit modal screen

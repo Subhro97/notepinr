@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:page_transition/page_transition.dart';
 
-import 'package:notpin/screens/search_note.dart';
+import 'package:notepinr/screens/search_note.dart';
 
-class SearchBar extends StatelessWidget {
-  const SearchBar({
+class SearchBarCustom extends StatelessWidget {
+  const SearchBarCustom({
     super.key,
     this.isReadOnly = true,
     this.onChange,

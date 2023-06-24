@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:notpin/utils/db_helper.dart';
-import 'package:notpin/utils/notification_api.dart';
+import 'package:notepinr/utils/db_helper.dart';
+import 'package:notepinr/utils/notification_api.dart';
 import 'package:page_transition/page_transition.dart';
 
-import 'package:notpin/screens/add_note.dart';
+import 'package:notepinr/screens/add_note.dart';
 
-import 'package:notpin/widgets/edit_item.dart';
-import 'package:notpin/widgets/edit_content_layout.dart';
+import 'package:notepinr/widgets/edit_item.dart';
+import 'package:notepinr/widgets/edit_content_layout.dart';
 
 class EditContent extends StatefulWidget {
   const EditContent({

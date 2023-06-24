@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:notpin/utils/colors.dart';
+import 'package:notepinr/utils/colors.dart';
 
 class SortOptions extends StatelessWidget {
   const SortOptions({super.key, required this.sortType, required this.onSort});

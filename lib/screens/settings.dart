@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-import 'package:notpin/widgets/settings_about.dart';
-import 'package:notpin/widgets/settings_main.dart';
+import 'package:notepinr/widgets/settings_about.dart';
+import 'package:notepinr/widgets/settings_main.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});

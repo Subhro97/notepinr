@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:notpin/utils/colors.dart';
-import 'package:notpin/widgets/filters_buttons.dart';
-import 'package:notpin/utils/db_helper.dart';
-import 'package:notpin/provider/notes_provider.dart';
-import 'package:notpin/utils/notification_api.dart';
+import 'package:notepinr/utils/colors.dart';
+import 'package:notepinr/widgets/filters_buttons.dart';
+import 'package:notepinr/utils/db_helper.dart';
+import 'package:notepinr/provider/notes_provider.dart';
+import 'package:notepinr/utils/notification_api.dart';
 
 class AddNote extends ConsumerStatefulWidget {
   const AddNote({
@@ -122,10 +122,9 @@ class _AddNoteState extends ConsumerState<AddNote> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!
           .save(); // To ececute the save methods of the text form fields.
-
       Map<String, Object?> data = {
-        "title": _enteredTitle,
-        "description": _enteredDesc,
+        "title": _enteredTitle.trim(),
+        "description": _enteredDesc.trim(),
         "priority": _priority,
         "pinned": _pinned == true ? 1 : 0,
         "date":
@@ -180,8 +179,13 @@ class _AddNoteState extends ConsumerState<AddNote> {
                   : const Color.fromRGBO(250, 250, 250, 0.87),
             ),
           ),
+          iconTheme: IconThemeData(
+            color: !theme
+                ? Colors.black
+                : const Color.fromRGBO(250, 250, 250, 0.87),
+          ),
           toolbarHeight: 64,
-          titleSpacing: 16,
+          titleSpacing: 0,
           centerTitle: false,
           backgroundColor: !theme ? Colors.white : Colors.black,
           scrolledUnderElevation: 0,
@@ -199,8 +203,21 @@ class _AddNoteState extends ConsumerState<AddNote> {
                 children: [
                   TextFormField(
                     controller: _titleController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Title',
+                      labelStyle: const TextStyle(
+                        fontFamily: 'Oxygen',
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: !theme
+                              ? Colors.black45
+                              : const Color.fromRGBO(250, 250, 250, 0.87),
+                        ),
+                      ),
+                    ),
+                    style: const TextStyle(
+                      fontFamily: 'Oxygen',
                     ),
                     focusNode: _titleFocusNode,
                     maxLength: 50,
@@ -226,8 +243,21 @@ class _AddNoteState extends ConsumerState<AddNote> {
                   const SizedBox(height: 16.0),
                   TextFormField(
                     controller: _desController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Description',
+                      labelStyle: const TextStyle(
+                        fontFamily: 'Oxygen',
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: !theme
+                              ? Colors.black45
+                              : const Color.fromRGBO(250, 250, 250, 0.87),
+                        ),
+                      ),
+                    ),
+                    style: const TextStyle(
+                      fontFamily: 'Oxygen',
                     ),
                     focusNode: _descriptionFocusNode,
                     maxLines: null,
@@ -249,34 +279,6 @@ class _AddNoteState extends ConsumerState<AddNote> {
                   const SizedBox(height: 16.0),
                   Row(
                     children: [
-                      Expanded(
-                        child: TextFormField(
-                          // initialValue: _selectedDate.toString(),
-                          decoration: const InputDecoration(
-                            labelText: 'Date',
-                          ),
-                          readOnly: true,
-                          controller: _dateController,
-                          onTap: _selectDate,
-                        ),
-                      ),
-                      const SizedBox(width: 8.0),
-                      Expanded(
-                        child: TextFormField(
-                          // initialValue: _selectedTime.toString(),
-                          decoration: const InputDecoration(
-                            labelText: 'Time',
-                          ),
-                          readOnly: true,
-                          controller: _timeController,
-                          onTap: _selectTime,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16.0),
-                  Row(
-                    children: [
                       const Text('Pinned :'),
                       IconButton(
                         iconSize: 32,
@@ -293,8 +295,8 @@ class _AddNoteState extends ConsumerState<AddNote> {
                     ],
                   ),
                   const SizedBox(height: 8.0),
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Icon(Icons.info_outlined),
                       SizedBox(width: 8.0),
                       Expanded(

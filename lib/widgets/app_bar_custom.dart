@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'package:notpin/utils/colors.dart';
+import 'package:notepinr/utils/colors.dart';
 
 class AppBarCustom extends StatefulWidget implements PreferredSizeWidget {
   @override
@@ -62,7 +61,7 @@ class _AppBarCustomState extends State<AppBarCustom> {
                   IconButton(
                     onPressed: () => widget.showFilterModal(context),
                     icon: const Icon(Icons.filter_list),
-                    // color: const Color.fromRGBO(255, 255, 255, 1),
+                    color: !widget.theme ? Colors.black : Colors.white,
                   )
                 ]
               : null,

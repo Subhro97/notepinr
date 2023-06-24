@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:notpin/utils/db_helper.dart';
+import 'package:notepinr/utils/db_helper.dart';
 
 class NotesNotifier extends StateNotifier<List<Map<String, Object?>>> {
   NotesNotifier() : super([]);
@@ -56,6 +56,7 @@ class NotesNotifier extends StateNotifier<List<Map<String, Object?>>> {
     //Filter Notes which are  checked in DB
     List<Map<String, Object?>> checkedNotes = res.where(
       (note) {
+        print(note['checked']);
         return (note['checked'] == 1);
       },
     ).toList();

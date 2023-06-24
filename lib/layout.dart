@@ -3,24 +3,24 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:notpin/utils/colors.dart';
+import 'package:notepinr/utils/colors.dart';
 
-import 'package:notpin/widgets/bottom_sheet_content.dart';
-import 'package:notpin/widgets/sort_filter_content.dart';
+import 'package:notepinr/widgets/bottom_sheet_content.dart';
+import 'package:notepinr/widgets/sort_filter_content.dart';
 
-import 'package:notpin/provider/notes_provider.dart';
+import 'package:notepinr/provider/notes_provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:notpin/screens/homepage.dart';
-import 'package:notpin/screens/add_note.dart';
-import 'package:notpin/screens/plans_page.dart';
-import 'package:notpin/screens/checked_page.dart';
-import 'package:notpin/screens/settings.dart';
+import 'package:notepinr/screens/homepage.dart';
+import 'package:notepinr/screens/add_note.dart';
+import 'package:notepinr/screens/plans_page.dart';
+import 'package:notepinr/screens/checked_page.dart';
+import 'package:notepinr/screens/settings.dart';
 
-import 'package:notpin/widgets/app_bar_custom.dart';
-import 'package:notpin/widgets/bottom_bar.dart';
-import 'package:notpin/widgets/search_bar.dart';
+import 'package:notepinr/widgets/app_bar_custom.dart';
+import 'package:notepinr/widgets/bottom_bar.dart';
+import 'package:notepinr/widgets/search_bar_custom.dart';
 
 class Layout extends ConsumerStatefulWidget {
   const Layout({super.key});
@@ -71,7 +71,7 @@ class _LayoutState extends ConsumerState<Layout> {
   Widget build(BuildContext context) {
     final providerList =
         ref.watch(notesProvider); //Getting the state set proider List
-
+    print(providerList);
     if (providerList.isNotEmpty) {
       //Filtering the List as per checked status;
       _notesList = (providerList[0]["unCheckedList"] as List).isNotEmpty
@@ -102,7 +102,7 @@ class _LayoutState extends ConsumerState<Layout> {
       value: SystemUiOverlayStyle(
         systemNavigationBarColor: !theme ? Colors.white : Colors.black,
         systemNavigationBarDividerColor: !theme
-            ? Colors.grey.withOpacity(0.28)
+            ? Color.fromARGB(255, 214, 214, 214).withOpacity(1)
             : const Color.fromARGB(255, 46, 46, 46).withOpacity(1),
         systemNavigationBarIconBrightness:
             !theme ? Brightness.dark : Brightness.light,
@@ -120,7 +120,7 @@ class _LayoutState extends ConsumerState<Layout> {
                 ? const Padding(
                     padding: EdgeInsets.only(
                         left: 16.0, right: 16.0, top: 0.0, bottom: 16.0),
-                    child: SearchBar(),
+                    child: SearchBarCustom(),
                   )
                 : const SizedBox(),
             Expanded(child: screensList[_selectedIndex]),
