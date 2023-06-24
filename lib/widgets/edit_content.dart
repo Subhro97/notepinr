@@ -82,15 +82,6 @@ class _EditContentState extends State<EditContent> {
 
   void _editHandler() {
     Navigator.of(context).pop();
-    dynamic time;
-
-    if (res[0]['time'] != 'null') {
-      time = res[0]['time'];
-      time = time.split("(")[1].split(")")[0];
-      time = TimeOfDay(
-          hour: int.parse(time.split(":")[0]),
-          minute: int.parse(time.split(":")[1]));
-    }
 
     Navigator.push(
       context,
@@ -106,12 +97,8 @@ class _EditContentState extends State<EditContent> {
           description: res[0]['description'],
           pinStatus: res[0]['pinned'] == 1 ? true : false,
           priority: res[0]['priority'],
-          date: res[0]['date'] == 'null'
-              ? null
-              : DateTime.parse(
-                  res[0]['date'],
-                ),
-          time: time,
+          date: res[0]['date'],
+          time: res[0]['time'],
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:intl/intl.dart';
 
 import 'package:notepinr/provider/notes_provider.dart';
 
@@ -21,6 +22,8 @@ class NoteCard extends ConsumerStatefulWidget {
   final String title;
   final String text;
   final int id;
+  final String date;
+  final String time;
 
   const NoteCard({
     super.key,
@@ -28,6 +31,8 @@ class NoteCard extends ConsumerStatefulWidget {
     required this.priority,
     required this.title,
     required this.text,
+    required this.date,
+    required this.time,
   });
 
   @override
@@ -171,32 +176,49 @@ class _NoteCardState extends ConsumerState<NoteCard> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime _now = DateTime.now();
+
     return NoteCardLayout(
       priority: widget.priority,
       itemList: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
               widget.title,
               style: TextStyle(
                 color: NoteCardLayout.cardTxtColor(widget.priority, 'txtColor'),
                 fontWeight: FontWeight.w700,
-                fontSize: 16,
+                fontSize: 22,
               ),
             ),
-            IconButton(
-              onPressed: () => _showEditModal(context),
-              icon: Icon(
-                Icons.more_vert,
-                color: NoteCardLayout.cardTxtColor(widget.priority, 'txtColor'),
+            SizedBox(
+              height: 36,
+              child: GestureDetector(
+                onTap: () => _showEditModal(context),
+                child: Icon(
+                  Icons.more_vert,
+                  color:
+                      NoteCardLayout.cardTxtColor(widget.priority, 'txtColor'),
+                ),
               ),
             ),
           ],
         ),
+        Text(
+          DateFormat('dd-MM-yyyy').format(_now).toString() == widget.date
+              ? widget.time
+              : widget.date,
+          style: TextStyle(
+            color: NoteCardLayout.cardTxtColor(widget.priority, 'txtColor')!
+                .withOpacity(0.85),
+            fontWeight: FontWeight.w700,
+            fontSize: 14,
+          ),
+        ),
         const SizedBox(
-          height: 8,
+          height: 16,
         ),
         RichText(
           text: TextSpan(

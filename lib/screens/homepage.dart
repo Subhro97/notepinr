@@ -34,6 +34,8 @@ class _HomePageState extends State<HomePage> {
               priority: widget.notes[index]['priority'],
               title: widget.notes[index]['title'],
               text: widget.notes[index]['description'],
+              date: widget.notes[index]['date'],
+              time: widget.notes[index]['time'],
             ),
           );
         }),

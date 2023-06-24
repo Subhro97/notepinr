@@ -100,6 +100,8 @@ class _SearchNoteState extends ConsumerState<SearchNote> {
                         priority: _searchedList[index]['priority'] as String,
                         title: _searchedList[index]['title'] as String,
                         text: _searchedList[index]['description'] as String,
+                        date: _searchedList[index]['date'],
+                        time: _searchedList[index]['time'],
                       ),
                     );
                   }),

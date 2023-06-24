@@ -122,14 +122,15 @@ class _AddNoteState extends ConsumerState<AddNote> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!
           .save(); // To ececute the save methods of the text form fields.
+      DateTime _now = DateTime.now();
       Map<String, Object?> data = {
         "title": _enteredTitle.trim(),
         "description": _enteredDesc.trim(),
         "priority": _priority,
         "pinned": _pinned == true ? 1 : 0,
-        "date":
-            _selectedDate != null ? _selectedDate!.toIso8601String() : 'null',
-        "time": _selectedTime != null ? _selectedTime.toString() : 'null',
+        "date": DateFormat('dd-MM-yyyy').format(_now).toString(),
+        "time":
+            '${_now.hour < 10 ? '0${_now.hour}' : _now.hour}:${_now.minute < 10 ? '0${_now.minute}' : _now.minute}',
         "checked": 0,
       };
 

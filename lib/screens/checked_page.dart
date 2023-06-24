@@ -30,6 +30,8 @@ class _CheckedPageState extends State<CheckedPage> {
               priority: widget.checkedNotes[index]['priority'],
               title: widget.checkedNotes[index]['title'],
               text: widget.checkedNotes[index]['description'],
+              date: widget.checkedNotes[index]['date'],
+              time: widget.checkedNotes[index]['time'],
             ),
           );
         }),

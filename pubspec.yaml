@@ -40,7 +40,6 @@ dependencies:
   intl: ^0.18.1
   path_provider: ^2.0.15
   uuid: ^3.0.7
-  flutter_local_notifications: ^14.1.0
   flutter_riverpod: ^2.3.6
   shared_preferences: ^2.1.1
   store_redirect: ^2.0.1
@@ -48,6 +47,7 @@ dependencies:
   url_launcher: ^6.1.11
   device_info_plus: ^9.0.2
   page_transition: ^2.0.9
+  flutter_local_notifications: ^14.1.1
 
 dev_dependencies:
   flutter_test:
