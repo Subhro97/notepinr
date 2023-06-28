@@ -27,7 +27,7 @@ class _AppBarCustomState extends State<AppBarCustom> {
       case (0):
         return 'notepinr';
       case (1):
-        return 'plans';
+        return 'info';
       case (2):
         return 'notes done';
       case (3):

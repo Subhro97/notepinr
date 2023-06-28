@@ -24,6 +24,7 @@ class NoteCard extends ConsumerStatefulWidget {
   final int id;
   final String date;
   final String time;
+  final bool isCheckedPage;
 
   const NoteCard({
     super.key,
@@ -33,6 +34,7 @@ class NoteCard extends ConsumerStatefulWidget {
     required this.text,
     required this.date,
     required this.time,
+    this.isCheckedPage = false,
   });
 
   @override
@@ -49,7 +51,7 @@ class _NoteCardState extends ConsumerState<NoteCard> {
       backgroundColor: Colors.transparent,
       builder: ((context) {
         return BottomSheetContent(
-          height: 0.47,
+          height: widget.isCheckedPage ? 0.4 : 0.47,
           child: EditContent(
             key: ValueKey(widget.id),
             noteID: widget.id,
@@ -63,8 +65,6 @@ class _NoteCardState extends ConsumerState<NoteCard> {
               widget.text,
               pinned,
               widget.priority,
-              date,
-              time,
             ),
             onChecked: (bool checkedStatus, bool pinStatus) =>
                 _checkedHandler(checkedStatus, pinStatus),
@@ -76,15 +76,20 @@ class _NoteCardState extends ConsumerState<NoteCard> {
   }
 
   void _checkedHandler(bool checkedStatus, bool pinStatus) async {
-    await DBHelper.updateCheckedStatus('notes_list', widget.id, !checkedStatus);
-    if (pinStatus) {
-      NotificationAPI.removePinnedNotifications(
-          widget.id); // Removing Notification Pinned in notification bar
-      await DBHelper.updatePinStatus(
-          'notes_list', widget.id, 0); // Setting pin sattus in DB to false
+    try {
+      await DBHelper.updateCheckedStatus(
+          'notepinr_notes_list', widget.id, !checkedStatus);
+      if (pinStatus) {
+        NotificationAPI.removePinnedNotifications(
+            widget.id); // Removing Notification Pinned in notification bar
+        await DBHelper.updatePinStatus('notepinr_notes_list', widget.id,
+            0); // Setting pin sattus in DB to false
+      }
+      Navigator.pop(context);
+      ref.watch(notesProvider.notifier).setNotesFromDB();
+    } catch (error) {
+      print(error);
     }
-    Navigator.pop(context);
-    ref.watch(notesProvider.notifier).setNotesFromDB();
   }
 
   void _shareNoteHandler() async {
@@ -141,7 +146,7 @@ class _NoteCardState extends ConsumerState<NoteCard> {
 
   // Deletes the notes & closes the delete modal
   void _deleteHandler(int noteID) {
-    DBHelper.deleteNote('notes_list', noteID);
+    DBHelper.deleteNote('notepinr_notes_list', noteID);
     NotificationAPI.removePinnedNotifications(noteID);
     ref.read(notesProvider.notifier).setNotesFromDB();
     Navigator.of(context).pop();
@@ -153,8 +158,6 @@ class _NoteCardState extends ConsumerState<NoteCard> {
     String description,
     bool pinned,
     String priority,
-    DateTime? date,
-    TimeOfDay? time,
   ) {
     Navigator.of(context).pop();
     Navigator.push(
@@ -166,8 +169,6 @@ class _NoteCardState extends ConsumerState<NoteCard> {
             description: description,
             pinStatus: pinned,
             priority: priority,
-            date: date,
-            time: time,
           );
         }),
       ),

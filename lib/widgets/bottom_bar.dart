@@ -69,9 +69,9 @@ class BottomBar extends StatelessWidget {
               ),
               BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.monetization_on_outlined,
+                  Icons.info_outline,
                 ),
-                label: 'Plans',
+                label: 'Info',
               ),
               BottomNavigationBarItem(
                 icon: Icon(

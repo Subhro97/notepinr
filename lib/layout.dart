@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:notepinr/screens/homepage.dart';
 import 'package:notepinr/screens/add_note.dart';
-import 'package:notepinr/screens/plans_page.dart';
+import 'package:notepinr/screens/info_page.dart';
 import 'package:notepinr/screens/checked_page.dart';
 import 'package:notepinr/screens/settings.dart';
 
@@ -71,7 +71,7 @@ class _LayoutState extends ConsumerState<Layout> {
   Widget build(BuildContext context) {
     final providerList =
         ref.watch(notesProvider); //Getting the state set proider List
-    print(providerList);
+
     if (providerList.isNotEmpty) {
       //Filtering the List as per checked status;
       _notesList = (providerList[0]["unCheckedList"] as List).isNotEmpty
@@ -89,7 +89,7 @@ class _LayoutState extends ConsumerState<Layout> {
       HomePage(
         notes: _notesList,
       ),
-      const PlansPage(),
+      const InfoPage(),
       CheckedPage(
         checkedNotes: _checkedList,
       ),

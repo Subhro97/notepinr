@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:notepinr/utils/file_path.dart';
@@ -15,8 +17,7 @@ class NotificationAPI {
     var subPath = _getPriorityIcon(priority);
     var path = await FilePath.getFilePath('assets/images/$subPath',
         subPath); // Getting the path of the priority icon stored in somewhere in the device
-    print(path);
-    print("spidey");
+
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
       'channel_id',
@@ -28,9 +29,9 @@ class NotificationAPI {
       autoCancel: false,
       enableVibration: false,
       largeIcon: FilePathAndroidBitmap(path),
+      color: Color.fromRGBO(59, 130, 246, 1),
     ); // Customizing the Notification
-    print(androidNotificationDetails);
-    print(flutterLocalNotificationsPlugin);
+
     NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
     await flutterLocalNotificationsPlugin.show(

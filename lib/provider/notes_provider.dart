@@ -7,7 +7,7 @@ class NotesNotifier extends StateNotifier<List<Map<String, Object?>>> {
   NotesNotifier() : super([]);
 
   Future<void> setNotesFromDB() async {
-    var res = await DBHelper.getAllNotes('notes_list');
+    var res = await DBHelper.getAllNotes('notepinr_notes_list');
 
     SharedPreferences prefs = await SharedPreferences
         .getInstance(); // Accessing the Shared Preferences Object

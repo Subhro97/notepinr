@@ -17,8 +17,8 @@ class AddNote extends ConsumerStatefulWidget {
     this.description = '',
     this.pinStatus = false,
     this.priority = 'High',
-    this.date,
-    this.time,
+    this.date = '',
+    this.time = '',
   });
 
   final int? noteID;
@@ -27,8 +27,8 @@ class AddNote extends ConsumerStatefulWidget {
   final String description;
   final bool pinStatus;
   final String priority;
-  final DateTime? date;
-  final TimeOfDay? time;
+  final String date;
+  final String time;
 
   @override
   ConsumerState<AddNote> createState() => _AddNoteState();
@@ -40,8 +40,6 @@ class _AddNoteState extends ConsumerState<AddNote> {
   final _titleFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
 
-  final _dateController = TextEditingController();
-  final _timeController = TextEditingController();
   late TextEditingController _titleController;
   late TextEditingController _desController;
 
@@ -50,9 +48,6 @@ class _AddNoteState extends ConsumerState<AddNote> {
 
   bool _pinned = false;
   String _priority = 'High';
-
-  DateTime? _selectedDate;
-  TimeOfDay? _selectedTime;
 
   @override
   void initState() {
@@ -63,47 +58,13 @@ class _AddNoteState extends ConsumerState<AddNote> {
     _enteredDesc = widget.description;
     _pinned = widget.pinStatus;
     _priority = widget.priority;
-    _selectedDate = widget.date;
-    _selectedTime = widget.time;
   }
 
   @override
   void dispose() {
     _titleFocusNode.dispose();
     _descriptionFocusNode.dispose();
-    _dateController.dispose();
-    _timeController.dispose();
     super.dispose();
-  }
-
-  void _selectDate() async {
-    final pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null) {
-      setState(() {
-        _selectedDate = pickedDate;
-        _dateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
-      });
-    }
-  }
-
-  void _selectTime() async {
-    final pickedTime = await showTimePicker(
-      context: context,
-      initialTime: const TimeOfDay(hour: 0, minute: 0),
-    );
-
-    if (pickedTime != null) {
-      setState(() {
-        _selectedTime = pickedTime;
-        _timeController.text = pickedTime.format(context);
-      });
-    }
   }
 
   void _resetForm() {
@@ -112,8 +73,6 @@ class _AddNoteState extends ConsumerState<AddNote> {
       _desController.text = '';
       _pinned = false;
       _priority = 'High';
-      _dateController.text = '';
-      _timeController.text = '';
     });
     FocusScope.of(context).unfocus();
   }
@@ -135,28 +94,31 @@ class _AddNoteState extends ConsumerState<AddNote> {
       };
 
       int? pinnedID;
+      try {
+        if (widget.noteID != null) {
+          DBHelper.updateNote('notepinr_notes_list', widget.noteID!, data);
+          NotificationAPI.removePinnedNotifications(widget
+              .noteID!); // Remove the previous notification with the same ID.
+        } else {
+          pinnedID = await DBHelper.insert('notepinr_notes_list', data);
+        }
 
-      if (widget.noteID != null) {
-        DBHelper.updateNote('notes_list', widget.noteID!, data);
-        NotificationAPI.removePinnedNotifications(widget
-            .noteID!); // Remove the previous notification with the same ID.
-      } else {
-        pinnedID = await DBHelper.insert('notes_list', data);
+        // If pinned option is selected in form, then pin notification
+        if (_pinned) {
+          NotificationAPI.showNotification(
+            widget.noteID == null ? pinnedID! : widget.noteID!,
+            _enteredTitle,
+            _enteredDesc,
+            _priority,
+          );
+        }
+
+        ref
+            .read(notesProvider.notifier)
+            .setNotesFromDB(); // To update the local state to the vale of the Database.
+      } catch (error) {
+        print(error);
       }
-
-      // If pinned option is selected in form, then pin notification
-      if (_pinned) {
-        NotificationAPI.showNotification(
-          widget.noteID == null ? pinnedID! : widget.noteID!,
-          _enteredTitle,
-          _enteredDesc,
-          _priority,
-        );
-      }
-
-      ref
-          .read(notesProvider.notifier)
-          .setNotesFromDB(); // To update the local state to the vale of the Database.
 
       Navigator.pop(ctx);
     }

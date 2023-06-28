@@ -39,7 +39,6 @@ dependencies:
   path: ^1.8.2
   intl: ^0.18.1
   path_provider: ^2.0.15
-  uuid: ^3.0.7
   flutter_riverpod: ^2.3.6
   shared_preferences: ^2.1.1
   store_redirect: ^2.0.1
@@ -85,6 +84,7 @@ flutter:
     - assets/images/medium.png
     - assets/images/low.png
     - assets/images/notepinr_logo.png
+    - assets/images/fallback_img.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

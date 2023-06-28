@@ -48,11 +48,11 @@ class _EditContentState extends State<EditContent> {
   @override
   initState() {
     super.initState();
-    DBHelper.getNote('notes_list', widget.noteID)
+    DBHelper.getNote('notepinr_notes_list', widget.noteID)
         .then(((value) => res = value));
 
     DBHelper.getPinNcheckedStatus(
-      'notes_list',
+      'notepinr_notes_list',
       widget.noteID,
     ).then((value) {
       _pinned = value['pinned']!;
@@ -74,7 +74,7 @@ class _EditContentState extends State<EditContent> {
             widget.priority,
           );
     DBHelper.updatePinStatus(
-      'notes_list',
+      'notepinr_notes_list',
       widget.noteID,
       _pinned ? 1 : 0,
     );

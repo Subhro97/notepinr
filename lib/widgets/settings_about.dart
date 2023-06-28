@@ -16,7 +16,7 @@ class SettingsAbout extends StatelessWidget {
         children: [
           const SettingsListItem(
             title: 'Version',
-            subTitle: '1.0.1',
+            subTitle: '1.0.0',
             icon: Icons.stay_current_portrait,
             onTap: null,
           ),
@@ -55,6 +55,15 @@ class SettingsAbout extends StatelessWidget {
             subTitle: 'Report any Issues faced in App',
             icon: Icons.bug_report_outlined,
             onTap: () => SettingsHelpers.suggestionNbugHandler('bug'),
+          ),
+          const SizedBox(
+            height: 24,
+          ),
+          SettingsListItem(
+            title: 'Privacy Policy',
+            subTitle: 'Notepinr Privacy Policy',
+            icon: Icons.privacy_tip_outlined,
+            onTap: () => SettingsHelpers.privacyUrlLauncher(),
           ),
         ],
       ),

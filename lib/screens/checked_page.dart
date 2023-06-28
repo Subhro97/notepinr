@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import 'package:notepinr/widgets/note_card.dart';
+import 'package:notepinr/widgets/fall_back.dart';
 
 class CheckedPage extends StatefulWidget {
   const CheckedPage({super.key, required this.checkedNotes});
@@ -13,6 +14,9 @@ class CheckedPage extends StatefulWidget {
 class _CheckedPageState extends State<CheckedPage> {
   @override
   Widget build(BuildContext context) {
+    if (widget.checkedNotes.length == 0) {
+      return FallBack(isMainScreen: false);
+    }
     return Container(
       width: double.infinity,
       child: ListView.builder(
@@ -32,6 +36,7 @@ class _CheckedPageState extends State<CheckedPage> {
               text: widget.checkedNotes[index]['description'],
               date: widget.checkedNotes[index]['date'],
               time: widget.checkedNotes[index]['time'],
+              isCheckedPage: true,
             ),
           );
         }),

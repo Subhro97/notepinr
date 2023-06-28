@@ -1,5 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.optimus.notepinr">
+   <uses-permission android:name="android.permission.INTERNET"/>
+   <queries>
+      <intent>
+          <action android:name="android.intent.action.VIEW" />
+          <data android:scheme="https" />
+      </intent>
+      <intent>
+          <action android:name="android.intent.action.SEND" />
+          <data android:mimeType="*/*" />
+      </intent>
+   </queries>
    <application
         android:label="Notepinr"
         android:name="${applicationName}"
@@ -23,11 +34,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="mailto" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

@@ -5,17 +5,11 @@ class DBHelper {
   static Future<sql.Database> database() async {
     final dbPath = await sql
         .getDatabasesPath(); // Getting the path where the DB will be stored
-    return sql.openDatabase(path.join(dbPath, 'notes_list.db'),
+    return sql.openDatabase(path.join(dbPath, 'notepinr_notes_list.db'),
         onCreate: (db, version) {
       return db.execute(
-          'CREATE TABLE notes_list(id INTEGER PRIMARY KEY autoincrement, title TEXT, description TEXT, priority TEXT, pinned INTEGER, date TEXT, time TEXT, checked INTEGER)');
-    }, onUpgrade: (db, oldVersion, newVersion) {
-      if (oldVersion < 2) {
-        // Add the "checked" column to the existing table
-        return db.execute(
-            'ALTER TABLE notes_list ADD COLUMN checked INTEGER DEFAULT 0');
-      }
-    }, version: 2);
+          'CREATE TABLE notepinr_notes_list(id INTEGER PRIMARY KEY autoincrement, title TEXT, description TEXT, priority TEXT, pinned INTEGER, date TEXT, time TEXT, checked INTEGER DEFAULT 0)');
+    }, version: 1);
   }
 
   static Future<int> insert(String table, Map<String, Object?> data) async {

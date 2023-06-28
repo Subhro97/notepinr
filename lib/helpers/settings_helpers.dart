@@ -5,11 +5,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
 import 'package:notepinr/utils/db_helper.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsHelpers {
   static void rateAppHandler() {
     StoreRedirect.redirect(
-      androidAppId: 'com.vg.notepin',
+      androidAppId: 'com.optimus.notepinr',
     );
   }
 
@@ -53,8 +54,18 @@ class SettingsHelpers {
     }
   }
 
+  static Future<void> privacyUrlLauncher() async {
+    if (!await launchUrlString(
+      'https://notepinr.web.app/',
+      mode: LaunchMode.inAppWebView,
+    )) {
+      throw Exception('Could not launch URL!');
+    }
+  }
+
   static void deleteAllNotes() {
-    DBHelper.deleteAllNotes('notes_list');
+    DBHelper.deleteAllNotes('notepinr_notes_list');
+    NotificationAPI.removeAllPinnedNotifications();
   }
 
   static void removeAllPins() {
