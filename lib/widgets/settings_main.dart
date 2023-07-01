@@ -177,6 +177,5 @@ class _SettingsMainState extends ConsumerState<SettingsMain> {
         ),
       ),
     );
-    ;
   }
 }

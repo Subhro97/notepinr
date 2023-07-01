@@ -68,6 +68,5 @@ class SettingsAbout extends StatelessWidget {
         ],
       ),
     );
-    ;
   }
 }

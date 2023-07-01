@@ -38,8 +38,8 @@ class _SearchNoteState extends ConsumerState<SearchNote> {
           _searchedList = _notesList
               .where(
                 (note) =>
-                    note['description'].contains(value) ||
-                    note['title'].contains(value),
+                    note['description'].contains(value.trim()) ||
+                    note['title'].contains(value.trim()),
               )
               .toList();
         }

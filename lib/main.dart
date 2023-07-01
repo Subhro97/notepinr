@@ -40,10 +40,6 @@ Future<void> main() async {
       child: MyApp(),
     ),
   );
-
-  // runApp(
-  //   TestScreen(),
-  // );
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -58,7 +54,6 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     // SharedPreferences.getInstance().then((prefs) => prefs.remove('theme'));
     SharedPreferences.getInstance().then((prefs) {

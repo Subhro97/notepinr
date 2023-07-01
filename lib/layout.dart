@@ -3,14 +3,11 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:notepinr/utils/colors.dart';
 
 import 'package:notepinr/widgets/bottom_sheet_content.dart';
 import 'package:notepinr/widgets/sort_filter_content.dart';
 
 import 'package:notepinr/provider/notes_provider.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:notepinr/screens/homepage.dart';
 import 'package:notepinr/screens/add_note.dart';

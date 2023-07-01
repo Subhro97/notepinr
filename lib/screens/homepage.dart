@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:notepinr/widgets/note_card.dart';
-import 'package:notepinr/widgets/fall_back.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.notes});
