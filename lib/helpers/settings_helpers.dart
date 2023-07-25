@@ -70,5 +70,6 @@ class SettingsHelpers {
 
   static void removeAllPins() {
     NotificationAPI.removeAllPinnedNotifications();
+    DBHelper.unPinAllNotes('notepinr_notes_list');
   }
 }

@@ -7,8 +7,7 @@ class NotesNotifier extends StateNotifier<List<Map<String, Object?>>> {
   NotesNotifier() : super([]);
 
   Future<void> setNotesFromDB() async {
-    var res = await DBHelper.getAllNotes('notepinr_notes_list');
-
+    var res = await DBHelper.getAllNotes('test_db');
     SharedPreferences prefs = await SharedPreferences
         .getInstance(); // Accessing the Shared Preferences Object
     String? sortType = prefs.getString('sort');
@@ -56,7 +55,6 @@ class NotesNotifier extends StateNotifier<List<Map<String, Object?>>> {
     //Filter Notes which are  checked in DB
     List<Map<String, Object?>> checkedNotes = res.where(
       (note) {
-        print(note['checked']);
         return (note['checked'] == 1);
       },
     ).toList();

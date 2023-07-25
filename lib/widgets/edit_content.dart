@@ -5,6 +5,7 @@ import 'package:notepinr/utils/notification_api.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'package:notepinr/screens/add_note.dart';
+import 'package:notepinr/screens/add_checklist.dart';
 
 import 'package:notepinr/widgets/edit_item.dart';
 import 'package:notepinr/widgets/edit_content_layout.dart';
@@ -20,12 +21,14 @@ class EditContent extends StatefulWidget {
     required this.onClone,
     required this.onChecked,
     required this.onShare,
+    this.isCheckedPage = false,
   });
 
   final int noteID;
   final String title;
   final String description;
   final String priority;
+  final bool isCheckedPage;
   final void Function() onOpenDeleteModal;
   final void Function(
     // BuildContext cloneCtx,
@@ -48,11 +51,10 @@ class _EditContentState extends State<EditContent> {
   @override
   initState() {
     super.initState();
-    DBHelper.getNote('notepinr_notes_list', widget.noteID)
-        .then(((value) => res = value));
+    DBHelper.getNote('test_db', widget.noteID).then(((value) => res = value));
 
     DBHelper.getPinNcheckedStatus(
-      'notepinr_notes_list',
+      'test_db',
       widget.noteID,
     ).then((value) {
       _pinned = value['pinned']!;
@@ -74,7 +76,7 @@ class _EditContentState extends State<EditContent> {
             widget.priority,
           );
     DBHelper.updatePinStatus(
-      'notepinr_notes_list',
+      'test_db',
       widget.noteID,
       _pinned ? 1 : 0,
     );
@@ -90,7 +92,7 @@ class _EditContentState extends State<EditContent> {
         type: PageTransitionType.rightToLeft,
         duration: Duration(milliseconds: 300),
         reverseDuration: Duration(milliseconds: 300),
-        child: AddNote(
+        child: AddChecklist(
           type: 'edit',
           noteID: widget.noteID,
           title: res[0]['title'],
@@ -107,44 +109,76 @@ class _EditContentState extends State<EditContent> {
   @override
   Widget build(BuildContext context) {
     return EditContentLayout(
-      itemList: [
-        EditItem(
-          type: 'edit',
-          value: null,
-          onTapHandler: _editHandler,
-        ),
-        EditItem(
-          type: 'done',
-          value: _checkedStatus,
-          onTapHandler: () => widget.onChecked(_checkedStatus, _pinned),
-        ),
-        if (!_checkedStatus)
-          EditItem(
-            type: 'pin',
-            value: _pinned,
-            onTapHandler: _pinHandler,
-          ),
-        EditItem(
-          type: 'clone',
-          value: null,
-          onTapHandler: () => widget.onClone(
-            // context,
-            res[0]['pinned'] == 1 ? true : false,
-            null,
-            null,
-          ),
-        ),
-        EditItem(
-          type: 'share',
-          value: null,
-          onTapHandler: () => widget.onShare(),
-        ),
-        EditItem(
-          type: 'delete',
-          value: null,
-          onTapHandler: (() => widget.onOpenDeleteModal()),
-        )
-      ],
+      itemList: widget.isCheckedPage
+          ? [
+              EditItem(
+                type: 'edit',
+                value: null,
+                onTapHandler: _editHandler,
+              ),
+              EditItem(
+                type: 'done',
+                value: _checkedStatus,
+                onTapHandler: () => widget.onChecked(_checkedStatus, _pinned),
+              ),
+              EditItem(
+                type: 'clone',
+                value: null,
+                onTapHandler: () => widget.onClone(
+                  // context,
+                  res[0]['pinned'] == 1 ? true : false,
+                  null,
+                  null,
+                ),
+              ),
+              EditItem(
+                type: 'share',
+                value: null,
+                onTapHandler: () => widget.onShare(),
+              ),
+              EditItem(
+                type: 'delete',
+                value: null,
+                onTapHandler: (() => widget.onOpenDeleteModal()),
+              )
+            ]
+          : [
+              EditItem(
+                type: 'edit',
+                value: null,
+                onTapHandler: _editHandler,
+              ),
+              EditItem(
+                type: 'done',
+                value: _checkedStatus,
+                onTapHandler: () => widget.onChecked(_checkedStatus, _pinned),
+              ),
+              EditItem(
+                type: 'pin',
+                value: _pinned,
+                onTapHandler: _pinHandler,
+              ),
+              EditItem(
+                type: 'clone',
+                value: null,
+                onTapHandler: () => widget.onClone(
+                  // context,
+                  res[0]['pinned'] == 1 ? true : false,
+                  null,
+                  null,
+                ),
+              ),
+              EditItem(
+                type: 'share',
+                value: null,
+                onTapHandler: () => widget.onShare(),
+              ),
+              EditItem(
+                type: 'delete',
+                value: null,
+                onTapHandler: (() => widget.onOpenDeleteModal()),
+              )
+            ],
     );
   }
 }

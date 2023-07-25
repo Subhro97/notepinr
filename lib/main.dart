@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -5,8 +7,14 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:notepinr/layout.dart';
+import 'package:notepinr/provider/card_mode_provider.dart';
 import 'package:notepinr/provider/theme_provider.dart';
+import 'package:notepinr/screens/checked_page.dart';
 import 'package:notepinr/utils/notification_api.dart';
+import 'package:notepinr/utils/db_helper.dart';
+import 'package:notepinr/provider/notes_provider.dart';
+import 'package:notepinr/screens/add_checklist.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 var lightColorScheme = ColorScheme.fromSeed(
@@ -18,8 +26,22 @@ var kdarkColorScheme = ColorScheme.fromSeed(
   seedColor: const Color.fromRGBO(59, 130, 246, 1),
 );
 
+ProviderContainer container = ProviderContainer();
+
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     NotificationAPI.flutterLocalNotificationsPlugin;
+
+String? selectedNotificationPayload;
+String initialRoute = '';
+
+@pragma('vm:entry-point')
+void notificationTapBackground(
+    NotificationResponse notificationResponse) async {
+  int notificationId = int.parse('${notificationResponse.id}');
+
+  await DBHelper.updatePinStatus('notepinr_notes_list', notificationId, 0);
+  NotificationAPI.removePinnedNotifications(notificationId);
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,10 +55,12 @@ Future<void> main() async {
       android: AndroidInitializationSettings(
           '@drawable/notification_logo'), // Replace with your app icon name
     ),
+    onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
   );
 
   runApp(
-    const ProviderScope(
+    UncontrolledProviderScope(
+      container: container,
       child: MyApp(),
     ),
   );
@@ -51,6 +75,7 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
   // This widget is the root of your application.
+  bool _notificationsEnabled = false;
 
   @override
   void initState() {
@@ -64,7 +89,25 @@ class _MyAppState extends ConsumerState<MyApp> {
       if (value == 'Dark') {
         ref.read(themeProvider.notifier).changeTheme(false);
       }
+
+      String? noteCardMode = prefs.getString('cardView');
+      ref.read(cardModeProvider.notifier).setCardMode(noteCardMode);
     });
+    _requestPermissions();
+  }
+
+  // Requesting permission for showing Notification
+  Future<void> _requestPermissions() async {
+    if (Platform.isAndroid) {
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+
+      final bool? granted = await androidImplementation?.requestPermission();
+      setState(() {
+        _notificationsEnabled = granted ?? false;
+      });
+    }
   }
 
   @override
@@ -120,6 +163,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     return theme == null
         ? MaterialApp(
+            initialRoute: initialRoute,
             debugShowCheckedModeBanner: false,
             title: 'notepinr',
             theme: lightTheme,
@@ -128,6 +172,7 @@ class _MyAppState extends ConsumerState<MyApp> {
             home: const Layout(),
           )
         : MaterialApp(
+            initialRoute: initialRoute,
             debugShowCheckedModeBanner: false,
             title: 'notepinr',
             theme: theme ? lightTheme : darkTheme,

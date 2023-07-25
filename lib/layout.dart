@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:page_transition/page_transition.dart';
+
+import 'package:notepinr/utils/notification_api.dart';
 
 import 'package:notepinr/widgets/bottom_sheet_content.dart';
 import 'package:notepinr/widgets/sort_filter_content.dart';
@@ -10,7 +11,6 @@ import 'package:notepinr/widgets/sort_filter_content.dart';
 import 'package:notepinr/provider/notes_provider.dart';
 
 import 'package:notepinr/screens/homepage.dart';
-import 'package:notepinr/screens/add_note.dart';
 import 'package:notepinr/screens/info_page.dart';
 import 'package:notepinr/screens/checked_page.dart';
 import 'package:notepinr/screens/settings.dart';
@@ -18,9 +18,13 @@ import 'package:notepinr/screens/settings.dart';
 import 'package:notepinr/widgets/app_bar_custom.dart';
 import 'package:notepinr/widgets/bottom_bar.dart';
 import 'package:notepinr/widgets/search_bar_custom.dart';
+import 'package:notepinr/widgets/change_card_view.dart';
+import 'package:notepinr/widgets/note_type_select.dart';
 
 class Layout extends ConsumerStatefulWidget {
   const Layout({super.key});
+
+  static const String routeName = '/';
 
   @override
   ConsumerState<Layout> createState() => _LayoutState();
@@ -57,8 +61,41 @@ class _LayoutState extends ConsumerState<Layout> {
       backgroundColor: Colors.transparent,
       builder: ((context) {
         return const BottomSheetContent(
-          height: 0.7,
+          height: 500,
           child: SortFilterContent(),
+        );
+      }),
+    );
+  }
+
+  void _showCardViewModal(ctx) {
+    showModalBottomSheet<void>(
+      context: ctx,
+      isScrollControlled: true,
+      enableDrag: false,
+      backgroundColor: Colors.transparent,
+      builder: ((context) {
+        return const BottomSheetContent(
+          height: 282,
+          child: ChangeCardView(),
+        );
+      }),
+    );
+  }
+
+  void _showNoteTypeModal(BuildContext ctx) {
+    showModalBottomSheet<void>(
+      context: ctx,
+      isScrollControlled: true,
+      enableDrag: false,
+      backgroundColor: Colors.transparent,
+      builder: ((context) {
+        return BottomSheetContent(
+          height: 260,
+          child: NoteTypeSelect(
+            refContext: ctx,
+            getNotes: _getNotes,
+          ),
         );
       }),
     );
@@ -93,6 +130,25 @@ class _LayoutState extends ConsumerState<Layout> {
       const Settings()
     ];
 
+    // If App started after reboot, to check if which notifications are pinned and show them in bar.
+    NotificationAPI.listOfActiveNotifications().then((notificationList) {
+      if (notificationList.isEmpty && _notesList.isNotEmpty) {
+        _notesList.forEach((elm) {
+          elm['pinned'] == 1
+              ? NotificationAPI.showNotification(
+                  elm['id'],
+                  elm['title'],
+                  elm['description'],
+                  elm['priority'],
+                )
+              : '';
+        });
+      }
+    }).catchError((error) {
+      print(error);
+      print('Active Not');
+    });
+
     bool theme = Theme.of(context).brightness == Brightness.dark;
 
     return AnnotatedRegion(
@@ -108,10 +164,12 @@ class _LayoutState extends ConsumerState<Layout> {
         appBar: AppBarCustom(
           selectedIndex: _selectedIndex,
           showFilterModal: (ctx) => _showFilterModal(ctx),
+          showCardViewModal: (ctx) => _showCardViewModal(ctx),
           theme: theme,
         ),
         backgroundColor: !theme ? Colors.white : Colors.black,
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _selectedIndex == 0
                 ? const Padding(
@@ -129,18 +187,7 @@ class _LayoutState extends ConsumerState<Layout> {
         ),
         floatingActionButton: _selectedIndex == 0
             ? FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      curve: Curves.linear,
-                      type: PageTransitionType.rightToLeft,
-                      duration: Duration(milliseconds: 100),
-                      reverseDuration: Duration(milliseconds: 100),
-                      child: const AddNote(),
-                    ),
-                  ).then((value) => _getNotes());
-                },
+                onPressed: () => _showNoteTypeModal(context),
                 elevation: 5,
                 backgroundColor: !theme
                     ? const Color.fromRGBO(59, 130, 246, 1)

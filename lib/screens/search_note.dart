@@ -29,19 +29,31 @@ class _SearchNoteState extends ConsumerState<SearchNote> {
           : [];
     }
 
+    // This method is used to normalize text by removing special characters in texts.
+    String _removeSpecialCharacters(String text) {
+      final regex = RegExp(r"[^\w\s]");
+      return text.replaceAll(regex, '');
+    }
+
     // This method is called every time the value in the search box is changed
     void searchHandler(String value) {
       setState(() {
         if (value.trim() == '') {
           _searchedList = [];
         } else {
-          _searchedList = _notesList
-              .where(
-                (note) =>
-                    note['description'].contains(value.trim()) ||
-                    note['title'].contains(value.trim()),
-              )
-              .toList();
+          _searchedList = _notesList.where((note) {
+            final normalizedTitle = _removeSpecialCharacters(note['title']);
+            final normalizedDescription =
+                _removeSpecialCharacters(note['description']);
+            final normalizedQuery = _removeSpecialCharacters(value);
+
+            return normalizedTitle
+                    .toLowerCase()
+                    .contains(normalizedQuery.toLowerCase().trim()) ||
+                normalizedDescription
+                    .toLowerCase()
+                    .contains(normalizedQuery.toLowerCase().trim());
+          }).toList();
         }
       });
     }
@@ -78,7 +90,7 @@ class _SearchNoteState extends ConsumerState<SearchNote> {
             ),
             Expanded(
               child: Container(
-                width: double.infinity,
+                // width: double.infinity,
                 padding:
                     const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
                 child: ListView.builder(
@@ -102,6 +114,7 @@ class _SearchNoteState extends ConsumerState<SearchNote> {
                         text: _searchedList[index]['description'] as String,
                         date: _searchedList[index]['date'],
                         time: _searchedList[index]['time'],
+                        noteType: _searchedList[index]['noteType'],
                       ),
                     );
                   }),

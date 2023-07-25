@@ -9,7 +9,7 @@ class NoteCardLayout extends StatelessWidget {
     required this.priority,
   });
 
-  final List<Widget> itemList;
+  final Widget? itemList;
   final String priority;
 
   static Color? cardTxtColor(value, caseVal) {
@@ -69,10 +69,7 @@ class NoteCardLayout extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: itemList,
-      ),
+      child: itemList,
     );
   }
 }

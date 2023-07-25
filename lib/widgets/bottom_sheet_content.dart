@@ -17,17 +17,20 @@ class BottomSheetContent extends StatefulWidget {
 class _BottomSheetContentState extends State<BottomSheetContent> {
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: widget.height,
-      builder: (context, scrollController) => Column(
+    bool theme = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      height: widget.height,
+      child: Column(
         children: [
           Container(
-            width: 40,
-            height: 40,
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 18, 18, 18),
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: !theme
+                  ? Color.fromRGBO(50, 50, 50, 1)
+                  : const Color.fromRGBO(25, 25, 25, 1),
               borderRadius: BorderRadius.all(
-                Radius.circular(40),
+                Radius.circular(50),
               ),
             ),
             child: IconButton(

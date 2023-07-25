@@ -10,11 +10,13 @@ class AppBarCustom extends StatefulWidget implements PreferredSizeWidget {
     super.key,
     required this.selectedIndex,
     required this.showFilterModal,
+    required this.showCardViewModal,
     required this.theme,
   });
 
   final int selectedIndex;
   final void Function(BuildContext ctx) showFilterModal;
+  final void Function(BuildContext ctx) showCardViewModal;
   final bool theme;
 
   @override
@@ -58,6 +60,12 @@ class _AppBarCustomState extends State<AppBarCustom> {
           scrolledUnderElevation: 0.0,
           actions: widget.selectedIndex == 0
               ? <Widget>[
+                  IconButton(
+                    iconSize: 26,
+                    onPressed: () => widget.showCardViewModal(context),
+                    icon: const Icon(Icons.layers_outlined),
+                    color: !widget.theme ? Colors.black : Colors.white,
+                  ),
                   IconButton(
                     onPressed: () => widget.showFilterModal(context),
                     icon: const Icon(Icons.filter_list),

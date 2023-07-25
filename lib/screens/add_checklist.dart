@@ -1,15 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+
+import 'package:notepinr/models/input_data.dart';
 
 import 'package:notepinr/utils/colors.dart';
+import 'package:notepinr/widgets/check_input_field.dart';
 import 'package:notepinr/widgets/filters_buttons.dart';
 import 'package:notepinr/utils/db_helper.dart';
 import 'package:notepinr/provider/notes_provider.dart';
 import 'package:notepinr/utils/notification_api.dart';
 
-class AddNote extends ConsumerStatefulWidget {
-  const AddNote({
+class AddChecklist extends ConsumerStatefulWidget {
+  const AddChecklist({
     super.key,
     this.noteID,
     this.type = 'add',
@@ -31,17 +37,17 @@ class AddNote extends ConsumerStatefulWidget {
   final String time;
 
   @override
-  ConsumerState<AddNote> createState() => _AddNoteState();
+  ConsumerState<AddChecklist> createState() => _AddChecklistState();
 }
 
-class _AddNoteState extends ConsumerState<AddNote> {
+class _AddChecklistState extends ConsumerState<AddChecklist> {
+  final uuid = Uuid();
+
   final _formKey = GlobalKey<FormState>();
 
   final _titleFocusNode = FocusNode();
-  final _descriptionFocusNode = FocusNode();
 
   late TextEditingController _titleController;
-  late TextEditingController _desController;
 
   var _enteredTitle = '';
   var _enteredDesc = '';
@@ -49,13 +55,41 @@ class _AddNoteState extends ConsumerState<AddNote> {
   bool _pinned = false;
   String _priority = 'High';
 
+  List<InputData> _checklistInputs =
+      []; // To store all the check list inputs in it
+  List<InputData> _idList = [];
+
   @override
   void initState() {
     super.initState();
 
     _titleController = TextEditingController(text: widget.title);
-    _desController = TextEditingController(text: widget.description);
-    _enteredDesc = widget.description;
+    if (widget.description != '') {
+      final _checkListString = jsonDecode(widget.description);
+      for (var jsonData in _checkListString) {
+        String text = jsonData['text'];
+        bool isChecked = jsonData['isChecked'];
+        int idx = 0;
+
+        // Create an InputData object and add it to the inputs list
+        _checklistInputs.add(
+          InputData(
+            uid: 'checkList${idx}',
+            text: text,
+            isChecked: isChecked,
+          ),
+        );
+        idx += 1;
+      }
+    } else {
+      _checklistInputs.add(InputData(
+        uid: 'checkList${0}',
+        text: '',
+        isChecked: false,
+      ));
+    }
+    _idList = _checklistInputs;
+
     _pinned = widget.pinStatus;
     _priority = widget.priority;
   }
@@ -63,14 +97,20 @@ class _AddNoteState extends ConsumerState<AddNote> {
   @override
   void dispose() {
     _titleFocusNode.dispose();
-    _descriptionFocusNode.dispose();
     super.dispose();
   }
 
   void _resetForm() {
     setState(() {
       _titleController.text = '';
-      _desController.text = '';
+      _checklistInputs = [
+        InputData(
+          uid: 'checkList${0}',
+          text: '',
+          isChecked: false,
+        )
+      ];
+      _idList = _checklistInputs;
       _pinned = false;
       _priority = 'High';
     });
@@ -80,12 +120,29 @@ class _AddNoteState extends ConsumerState<AddNote> {
   void _submitForm(ctx) async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!
-          .save(); // To ececute the save methods of the text form fields.
+          .save(); // To execute the save methods of the text form fields.
       DateTime _now = DateTime.now();
+
+      List<Map<String, dynamic>> checklistData =
+          []; // To store all the checklist inside this array and stringify it.
+
+      for (var input in _checklistInputs) {
+        String text = input.text;
+        bool isChecked = input.isChecked;
+        if (text != '') {
+          Map<String, dynamic> inputMap = {
+            'text': text,
+            'isChecked': isChecked,
+          };
+
+          checklistData.add(inputMap);
+        }
+      }
+
       Map<String, Object?> data = {
-        "noteType": 'note',
+        "noteType": 'checklist',
         "title": _enteredTitle.trim(),
-        "description": _enteredDesc.trim(),
+        "description": jsonEncode(checklistData),
         "priority": _priority,
         "pinned": _pinned == true ? 1 : 0,
         "date": DateFormat('dd-MM-yyyy').format(_now).toString(),
@@ -97,7 +154,7 @@ class _AddNoteState extends ConsumerState<AddNote> {
       int? pinnedID;
       try {
         if (widget.noteID != null) {
-          DBHelper.updateNote('test_db', widget.noteID!, data);
+          await DBHelper.updateNote('test_db', widget.noteID!, data);
           NotificationAPI.removePinnedNotifications(widget
               .noteID!); // Remove the previous notification with the same ID.
         } else {
@@ -128,6 +185,7 @@ class _AddNoteState extends ConsumerState<AddNote> {
   @override
   Widget build(BuildContext context) {
     bool theme = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () {
         // Unfocus text fields when tapping outside
@@ -136,7 +194,7 @@ class _AddNoteState extends ConsumerState<AddNote> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.type.trim() == 'edit' ? 'edit note' : 'add note',
+            widget.type.trim() == 'edit' ? 'edit to-do' : 'add to-do',
             style: TextStyle(
               color: !theme
                   ? ColorsLightTheme.txtColor
@@ -165,6 +223,7 @@ class _AddNoteState extends ConsumerState<AddNote> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Title Input Form field
                   TextFormField(
                     controller: _titleController,
                     decoration: InputDecoration(
@@ -193,8 +252,8 @@ class _AddNoteState extends ConsumerState<AddNote> {
                       });
                     },
                     onFieldSubmitted: (_) {
-                      FocusScope.of(context)
-                          .requestFocus(_descriptionFocusNode);
+                      // FocusScope.of(context)
+                      //     .requestFocus(_descriptionFocusNode);
                     },
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -204,43 +263,64 @@ class _AddNoteState extends ConsumerState<AddNote> {
                     },
                     onSaved: (newValue) => _enteredTitle = newValue!,
                   ),
-                  const SizedBox(height: 16.0),
-                  TextFormField(
-                    controller: _desController,
-                    decoration: InputDecoration(
-                      labelText: 'Description',
-                      labelStyle: const TextStyle(
+
+                  // To Display the checklist
+                  for (int index = 0; index < _checklistInputs.length; index++)
+                    CheckInputField(
+                      key: ValueKey(index),
+                      inputData: _checklistInputs[index],
+                      isLastItem: index == _checklistInputs.length - 1,
+                      onChanged: (text) {
+                        setState(() {
+                          _checklistInputs[index].text = text;
+                        });
+                      },
+                      onCheckboxChanged: (isChecked) {
+                        setState(() {
+                          _checklistInputs[index].isChecked = isChecked!;
+                        });
+                      },
+                      onCrossIconClicked: () {
+                        setState(() {
+                          _checklistInputs.removeAt(index);
+                        });
+                      },
+                    ),
+                  // Add check Note Button
+                  ListTile(
+                    leading: Icon(Icons.add),
+                    iconColor: !theme
+                        ? Colors.black
+                        : const Color.fromRGBO(250, 250, 250, 0.8),
+                    title: Text(
+                      'Add',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
                         fontFamily: 'Oxygen',
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: !theme
-                              ? Colors.black45
-                              : const Color.fromRGBO(250, 250, 250, 0.87),
-                        ),
+                        color: !theme
+                            ? const Color.fromRGBO(0, 0, 0, 1)
+                            : const Color.fromRGBO(250, 250, 250, 0.8),
                       ),
                     ),
-                    style: const TextStyle(
-                      fontFamily: 'Oxygen',
-                    ),
-                    focusNode: _descriptionFocusNode,
-                    maxLines: null,
-                    textInputAction: TextInputAction.newline,
-                    onChanged: (_) {
+                    horizontalTitleGap: 8,
+                    dense: true,
+                    contentPadding: const EdgeInsets.all(0),
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
                       setState(() {
-                        // Reset the validation error when typing
-                        _formKey.currentState!.validate();
+                        _checklistInputs.add(InputData(
+                          uid: 'checkList${_idList.length}',
+                          text: '',
+                          isChecked: false,
+                        ));
+                        _idList = _checklistInputs;
                       });
                     },
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter a description';
-                      }
-                      return null;
-                    },
-                    onSaved: (newValue) => _enteredDesc = newValue!,
                   ),
+
                   const SizedBox(height: 16.0),
+
                   Row(
                     children: [
                       const Text('Pinned :'),

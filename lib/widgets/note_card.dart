@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notepinr/widgets/detail_card.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:intl/intl.dart';
 
 import 'package:notepinr/provider/notes_provider.dart';
+import 'package:notepinr/provider/card_mode_provider.dart';
 
 import 'package:notepinr/screens/add_note.dart';
 
@@ -13,6 +14,7 @@ import 'package:notepinr/widgets/edit_content.dart';
 import 'package:notepinr/widgets/edit_item.dart';
 import 'package:notepinr/widgets/edit_content_layout.dart';
 import 'package:notepinr/widgets/note_card_layout.dart';
+import 'package:notepinr/widgets/list_card.dart';
 
 import 'package:notepinr/utils/db_helper.dart';
 import 'package:notepinr/utils/notification_api.dart';
@@ -25,6 +27,7 @@ class NoteCard extends ConsumerStatefulWidget {
   final String date;
   final String time;
   final bool isCheckedPage;
+  final String noteType;
 
   const NoteCard({
     super.key,
@@ -34,6 +37,7 @@ class NoteCard extends ConsumerStatefulWidget {
     required this.text,
     required this.date,
     required this.time,
+    required this.noteType,
     this.isCheckedPage = false,
   });
 
@@ -51,13 +55,14 @@ class _NoteCardState extends ConsumerState<NoteCard> {
       backgroundColor: Colors.transparent,
       builder: ((context) {
         return BottomSheetContent(
-          height: widget.isCheckedPage ? 0.4 : 0.47,
+          height: widget.isCheckedPage ? 320 : 370,
           child: EditContent(
             key: ValueKey(widget.id),
             noteID: widget.id,
             title: widget.title,
             description: widget.text,
             priority: widget.priority,
+            isCheckedPage: widget.isCheckedPage,
             onOpenDeleteModal: () => _deleteModalOpen(widget.id),
             onClone: (pinned, date, time) => _cloneHandler(
               widget.id,
@@ -77,16 +82,15 @@ class _NoteCardState extends ConsumerState<NoteCard> {
 
   void _checkedHandler(bool checkedStatus, bool pinStatus) async {
     try {
-      await DBHelper.updateCheckedStatus(
-          'notepinr_notes_list', widget.id, !checkedStatus);
+      await DBHelper.updateCheckedStatus('test_db', widget.id, !checkedStatus);
       if (pinStatus) {
         NotificationAPI.removePinnedNotifications(
             widget.id); // Removing Notification Pinned in notification bar
-        await DBHelper.updatePinStatus('notepinr_notes_list', widget.id,
-            0); // Setting pin sattus in DB to false
+        await DBHelper.updatePinStatus(
+            'test_db', widget.id, 0); // Setting pin sattus in DB to false
       }
       Navigator.pop(context);
-      ref.watch(notesProvider.notifier).setNotesFromDB();
+      ref.read(notesProvider.notifier).setNotesFromDB();
     } catch (error) {
       print(error);
     }
@@ -109,7 +113,7 @@ class _NoteCardState extends ConsumerState<NoteCard> {
       backgroundColor: Colors.transparent,
       builder: ((ctx) {
         return BottomSheetContent(
-          height: 0.27,
+          height: 203,
           child: EditContentLayout(
             itemList: [
               const Padding(
@@ -146,7 +150,7 @@ class _NoteCardState extends ConsumerState<NoteCard> {
 
   // Deletes the notes & closes the delete modal
   void _deleteHandler(int noteID) {
-    DBHelper.deleteNote('notepinr_notes_list', noteID);
+    DBHelper.deleteNote('test_db', noteID);
     NotificationAPI.removePinnedNotifications(noteID);
     ref.read(notesProvider.notifier).setNotesFromDB();
     Navigator.of(context).pop();
@@ -179,90 +183,35 @@ class _NoteCardState extends ConsumerState<NoteCard> {
   Widget build(BuildContext context) {
     DateTime _now = DateTime.now();
 
+    final noteCardMode = ref.watch(cardModeProvider); // To obtain the card mode
+
+    print(noteCardMode);
     return NoteCardLayout(
       priority: widget.priority,
-      itemList: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              widget.title,
-              style: TextStyle(
-                color: NoteCardLayout.cardTxtColor(widget.priority, 'txtColor'),
-                fontWeight: FontWeight.w700,
-                fontSize: 22,
-              ),
+      itemList: noteCardMode == 'detail' ||
+              noteCardMode == null ||
+              noteCardMode == 'grid'
+          ? DetailCard(
+              title: widget.title,
+              priority: widget.priority,
+              isCheckedPage: widget.isCheckedPage,
+              text: widget.text,
+              time: widget.time,
+              date: widget.date,
+              noteType: widget.noteType,
+              now: _now,
+              showEditModal: () => _showEditModal(context),
+            )
+          : ListCard(
+              title: widget.title,
+              priority: widget.priority,
+              isCheckedPage: widget.isCheckedPage,
+              text: widget.text,
+              time: widget.time,
+              date: widget.date,
+              now: _now,
+              showEditModal: () => _showEditModal(context),
             ),
-            SizedBox(
-              height: 36,
-              child: GestureDetector(
-                onTap: () => _showEditModal(context),
-                child: Icon(
-                  Icons.more_vert,
-                  color:
-                      NoteCardLayout.cardTxtColor(widget.priority, 'txtColor'),
-                ),
-              ),
-            ),
-          ],
-        ),
-        Text(
-          DateFormat('dd-MM-yyyy').format(_now).toString() == widget.date
-              ? widget.time
-              : widget.date,
-          style: TextStyle(
-            color: NoteCardLayout.cardTxtColor(widget.priority, 'txtColor')!
-                .withOpacity(0.85),
-            fontWeight: FontWeight.w700,
-            fontSize: 14,
-          ),
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        RichText(
-          text: TextSpan(
-            style: TextStyle(
-              color: NoteCardLayout.cardTxtColor(widget.priority, 'txtColor'),
-            ),
-            children: widget.text
-                .split('\n')
-                .map(
-                  (line) => TextSpan(
-                    text: line + '\n',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                )
-                .toList(),
-          ),
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        Container(
-          width: widget.priority == 'High'
-              ? 47
-              : widget.priority == 'Medium'
-                  ? 60
-                  : 40,
-          height: 20,
-          decoration: BoxDecoration(
-            color: NoteCardLayout.cardTxtColor(widget.priority, 'tagColor'),
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Center(
-            child: Text(
-              widget.priority,
-              style: TextStyle(
-                color: NoteCardLayout.cardTxtColor(widget.priority, 'tagTxt'),
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        )
-      ],
     );
   }
 }

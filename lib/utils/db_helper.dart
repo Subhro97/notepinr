@@ -5,11 +5,20 @@ class DBHelper {
   static Future<sql.Database> database() async {
     final dbPath = await sql
         .getDatabasesPath(); // Getting the path where the DB will be stored
-    return sql.openDatabase(path.join(dbPath, 'notepinr_notes_list.db'),
-        onCreate: (db, version) {
-      return db.execute(
-          'CREATE TABLE notepinr_notes_list(id INTEGER PRIMARY KEY autoincrement, title TEXT, description TEXT, priority TEXT, pinned INTEGER, date TEXT, time TEXT, checked INTEGER DEFAULT 0)');
-    }, version: 1);
+    return sql.openDatabase(
+      path.join(dbPath, 'test_db.db'),
+      onCreate: (db, version) {
+        return db.execute(
+            'CREATE TABLE test_db(id INTEGER PRIMARY KEY autoincrement, noteType TEXT, title TEXT, description TEXT, priority TEXT, pinned INTEGER, date TEXT, time TEXT, checked INTEGER DEFAULT 0)');
+      },
+      // onUpgrade: (db, oldVersion, newVersion) {
+      //   if (oldVersion < newVersion) {
+      //     db.execute(
+      //         "ALTER TABLE notepinr_notes_list ADD COLUMN noteType TEXT;");
+      //   }
+      // },
+      version: 1,
+    );
   }
 
   static Future<int> insert(String table, Map<String, Object?> data) async {
@@ -79,6 +88,15 @@ class DBHelper {
       {'pinned': pinnedStatus},
       where: 'id = ?',
       whereArgs: [id],
+    );
+  }
+
+  static Future<void> unPinAllNotes(String table) async {
+    final db = await DBHelper.database();
+
+    await db.update(
+      table,
+      {'pinned': 0},
     );
   }
 
