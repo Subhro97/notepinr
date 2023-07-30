@@ -14,6 +14,7 @@ class EditContent extends StatefulWidget {
   const EditContent({
     super.key,
     required this.noteID,
+    required this.noteType,
     required this.title,
     required this.description,
     required this.priority,
@@ -25,6 +26,7 @@ class EditContent extends StatefulWidget {
   });
 
   final int noteID;
+  final String noteType;
   final String title;
   final String description;
   final String priority;
@@ -51,10 +53,11 @@ class _EditContentState extends State<EditContent> {
   @override
   initState() {
     super.initState();
-    DBHelper.getNote('test_db', widget.noteID).then(((value) => res = value));
+    DBHelper.getNote('notepinr_notes_lists', widget.noteID)
+        .then(((value) => res = value));
 
     DBHelper.getPinNcheckedStatus(
-      'test_db',
+      'notepinr_notes_lists',
       widget.noteID,
     ).then((value) {
       _pinned = value['pinned']!;
@@ -76,7 +79,7 @@ class _EditContentState extends State<EditContent> {
             widget.priority,
           );
     DBHelper.updatePinStatus(
-      'test_db',
+      'notepinr_notes_lists',
       widget.noteID,
       _pinned ? 1 : 0,
     );
@@ -92,16 +95,27 @@ class _EditContentState extends State<EditContent> {
         type: PageTransitionType.rightToLeft,
         duration: Duration(milliseconds: 300),
         reverseDuration: Duration(milliseconds: 300),
-        child: AddChecklist(
-          type: 'edit',
-          noteID: widget.noteID,
-          title: res[0]['title'],
-          description: res[0]['description'],
-          pinStatus: res[0]['pinned'] == 1 ? true : false,
-          priority: res[0]['priority'],
-          date: res[0]['date'],
-          time: res[0]['time'],
-        ),
+        child: widget.noteType == 'checklist'
+            ? AddChecklist(
+                type: 'edit',
+                noteID: widget.noteID,
+                title: res[0]['title'],
+                description: res[0]['description'],
+                pinStatus: res[0]['pinned'] == 1 ? true : false,
+                priority: res[0]['priority'],
+                date: res[0]['date'],
+                time: res[0]['time'],
+              )
+            : AddNote(
+                type: 'edit',
+                noteID: widget.noteID,
+                title: res[0]['title'],
+                description: res[0]['description'],
+                pinStatus: res[0]['pinned'] == 1 ? true : false,
+                priority: res[0]['priority'],
+                date: res[0]['date'],
+                time: res[0]['time'],
+              ),
       ),
     );
   }

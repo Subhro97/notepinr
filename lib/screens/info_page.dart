@@ -18,7 +18,7 @@ class _InfoPageState extends State<InfoPage> {
         children: [
           SettingsContainerLayout(
             child: Text(
-                'Thank you so much for downloading the app. I hope you find great use of the app. 😊 \n\nThe app is completely free and ad-free,  so you can enjoy all it\'s amazing features without any distractions. \n\nI just have a request to support the application by sharing it with your friends, family, and colleagues. \n\nTogether, let\'s make this app even more awesome! ❤️ '),
+                'Thank you so much for downloading.😊 \n\nThe app is completely free and ad-free,  so you can enjoy all it\'s amazing features without any distractions. \n\nI just have a request to support the application by sharing it with your friends, family, and colleagues. ❤️ \n\n Also, don\'t forget to leave a 5⭐ rating to show your love. \n\nTogether, let\'s make this app even more awesome! 🚀'),
             heading: 'Developer\'s Note',
           ),
           FaqList(),

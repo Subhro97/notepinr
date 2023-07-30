@@ -109,11 +109,12 @@ class _SettingsMainState extends ConsumerState<SettingsMain> {
                         children: [
                           Icon(
                             !theme ? Icons.wb_sunny : Icons.wb_sunny_outlined,
+                            size: 28,
                           ),
                           const Text(
                             'Light',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: FontWeight.w700,
                               // fontFamily: 'Oxygen',
                             ),
@@ -137,11 +138,12 @@ class _SettingsMainState extends ConsumerState<SettingsMain> {
                             theme
                                 ? Icons.nightlight
                                 : Icons.nightlight_outlined,
+                            size: 28,
                           ),
                           const Text(
                             'Dark',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: FontWeight.w700,
                               // fontFamily: 'Oxygen',
                             ),

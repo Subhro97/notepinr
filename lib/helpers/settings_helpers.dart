@@ -1,5 +1,4 @@
 import 'package:notepinr/utils/notification_api.dart';
-import 'package:store_redirect/store_redirect.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -8,15 +7,18 @@ import 'package:notepinr/utils/db_helper.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsHelpers {
-  static void rateAppHandler() {
-    StoreRedirect.redirect(
-      androidAppId: 'com.optimus.notepinr',
-    );
+  static void rateAppHandler() async {
+    if (!await launchUrlString(
+      'https://play.google.com/store/apps/details?id=com.optimus.notepinr',
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw Exception('Could not launch App Store!');
+    }
   }
 
   static void shareAppHandler() {
     Share.share(
-        '📌 Never miss a beat! notepinr keeps your important reminders within reach, right in your notification bar. \n\n Download now:  https://play.google.com/store/apps/details?id=com.vg.notepin');
+        '📌 Never miss a beat! notepinr keeps your important reminders within reach, right in your notification bar. \n\n Download now: https://play.google.com/store/apps/details?id=com.optimus.notepinr');
   }
 
   static Future<void> suggestionNbugHandler(String type) async {
@@ -64,12 +66,12 @@ class SettingsHelpers {
   }
 
   static void deleteAllNotes() {
-    DBHelper.deleteAllNotes('notepinr_notes_list');
+    DBHelper.deleteAllNotes('notepinr_notes_lists');
     NotificationAPI.removeAllPinnedNotifications();
   }
 
   static void removeAllPins() {
     NotificationAPI.removeAllPinnedNotifications();
-    DBHelper.unPinAllNotes('notepinr_notes_list');
+    DBHelper.unPinAllNotes('notepinr_notes_lists');
   }
 }

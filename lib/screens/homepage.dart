@@ -19,7 +19,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final noteCardMode = ref.watch(cardModeProvider); // To obtain the card mode
-    print(widget.notes);
+
     return Container(
       width: double.infinity,
       child: noteCardMode == 'grid'

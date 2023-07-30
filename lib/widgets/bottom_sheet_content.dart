@@ -19,6 +19,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
   Widget build(BuildContext context) {
     bool theme = Theme.of(context).brightness == Brightness.dark;
     return Container(
+      width: double.infinity,
       height: widget.height,
       child: Column(
         children: [

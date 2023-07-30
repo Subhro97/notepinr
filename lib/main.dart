@@ -39,7 +39,7 @@ void notificationTapBackground(
     NotificationResponse notificationResponse) async {
   int notificationId = int.parse('${notificationResponse.id}');
 
-  await DBHelper.updatePinStatus('notepinr_notes_list', notificationId, 0);
+  await DBHelper.updatePinStatus('notepinr_notes_lists', notificationId, 0);
   NotificationAPI.removePinnedNotifications(notificationId);
 }
 
@@ -80,7 +80,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
-    // SharedPreferences.getInstance().then((prefs) => prefs.remove('theme'));
+    // SharedPreferences.getInstance().then((prefs) => prefs.remove('sort'));
     SharedPreferences.getInstance().then((prefs) {
       var value = prefs.getString('theme');
       if (value == 'Light') {

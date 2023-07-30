@@ -146,7 +146,6 @@ class _LayoutState extends ConsumerState<Layout> {
       }
     }).catchError((error) {
       print(error);
-      print('Active Not');
     });
 
     bool theme = Theme.of(context).brightness == Brightness.dark;

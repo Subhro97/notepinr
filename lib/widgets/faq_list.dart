@@ -16,6 +16,13 @@ class _FaqListState extends State<FaqList> {
       'content':
           'Some phones have the power saving option selected by default which might prevent the app from running in the background. Try to disable this option from your phone\'s Settings to resolve the issue. If the issue still persists, you can contact me by the Report Bug option in the Settings tab.',
     },
+    {
+      'id': '2',
+      'title':
+          'Why do notification pins disappear after rebooting or restarting a phone?',
+      'content':
+          'When you restart/reboot your phone, all the apps that were open get closed, and any pinned notifications on the app icons are removed. \nTo pin the existing notifications again, you just need to open the app again.',
+    },
   ];
   @override
   Widget build(BuildContext context) {
@@ -37,7 +44,10 @@ class _FaqListState extends State<FaqList> {
             height: 16,
           ),
           ExpansionPanelList.radio(
-            elevation: 1,
+            // elevation: 1,
+            dividerColor: !theme
+                ? const Color.fromRGBO(224, 224, 224, 1)
+                : const Color.fromRGBO(224, 224, 224, 0.5),
             children: _faqItems
                 .map<ExpansionPanelRadio>(
                   (item) => ExpansionPanelRadio(

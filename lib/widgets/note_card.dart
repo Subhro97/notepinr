@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notepinr/screens/add_checklist.dart';
 import 'package:notepinr/widgets/detail_card.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -59,6 +60,7 @@ class _NoteCardState extends ConsumerState<NoteCard> {
           child: EditContent(
             key: ValueKey(widget.id),
             noteID: widget.id,
+            noteType: widget.noteType,
             title: widget.title,
             description: widget.text,
             priority: widget.priority,
@@ -82,12 +84,13 @@ class _NoteCardState extends ConsumerState<NoteCard> {
 
   void _checkedHandler(bool checkedStatus, bool pinStatus) async {
     try {
-      await DBHelper.updateCheckedStatus('test_db', widget.id, !checkedStatus);
+      await DBHelper.updateCheckedStatus(
+          'notepinr_notes_lists', widget.id, !checkedStatus);
       if (pinStatus) {
         NotificationAPI.removePinnedNotifications(
             widget.id); // Removing Notification Pinned in notification bar
-        await DBHelper.updatePinStatus(
-            'test_db', widget.id, 0); // Setting pin sattus in DB to false
+        await DBHelper.updatePinStatus('notepinr_notes_lists', widget.id,
+            0); // Setting pin sattus in DB to false
       }
       Navigator.pop(context);
       ref.read(notesProvider.notifier).setNotesFromDB();
@@ -150,7 +153,7 @@ class _NoteCardState extends ConsumerState<NoteCard> {
 
   // Deletes the notes & closes the delete modal
   void _deleteHandler(int noteID) {
-    DBHelper.deleteNote('test_db', noteID);
+    DBHelper.deleteNote('notepinr_notes_lists', noteID);
     NotificationAPI.removePinnedNotifications(noteID);
     ref.read(notesProvider.notifier).setNotesFromDB();
     Navigator.of(context).pop();
@@ -168,12 +171,19 @@ class _NoteCardState extends ConsumerState<NoteCard> {
       context,
       MaterialPageRoute(
         builder: ((context) {
-          return AddNote(
-            title: title,
-            description: description,
-            pinStatus: pinned,
-            priority: priority,
-          );
+          return widget.noteType == 'checklist'
+              ? AddChecklist(
+                  title: title,
+                  description: description,
+                  pinStatus: pinned,
+                  priority: priority,
+                )
+              : AddNote(
+                  title: title,
+                  description: description,
+                  pinStatus: pinned,
+                  priority: priority,
+                );
         }),
       ),
     );
@@ -185,7 +195,6 @@ class _NoteCardState extends ConsumerState<NoteCard> {
 
     final noteCardMode = ref.watch(cardModeProvider); // To obtain the card mode
 
-    print(noteCardMode);
     return NoteCardLayout(
       priority: widget.priority,
       itemList: noteCardMode == 'detail' ||

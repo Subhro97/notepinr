@@ -16,7 +16,7 @@ class SettingsAbout extends StatelessWidget {
         children: [
           const SettingsListItem(
             title: 'Version',
-            subTitle: '1.0.0',
+            subTitle: '1.1.1',
             icon: Icons.stay_current_portrait,
             onTap: null,
           ),

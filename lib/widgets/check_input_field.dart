@@ -39,6 +39,7 @@ class _CheckInputFieldState extends State<CheckInputField> {
     } else {
       _focusNode = null;
     }
+    _valueController = TextEditingController(text: widget.inputData.text);
   }
 
   // To dispose the focus node for rest check inputs
@@ -53,8 +54,6 @@ class _CheckInputFieldState extends State<CheckInputField> {
   @override
   Widget build(BuildContext context) {
     bool theme = Theme.of(context).brightness == Brightness.dark;
-
-    _valueController = TextEditingController(text: widget.inputData.text);
 
     return ListTile(
       key: widget.key,

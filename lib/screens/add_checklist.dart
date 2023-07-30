@@ -100,7 +100,7 @@ class _AddChecklistState extends ConsumerState<AddChecklist> {
     super.dispose();
   }
 
-  void _resetForm() {
+  void _resetForm(ctx) {
     setState(() {
       _titleController.text = '';
       _checklistInputs = [
@@ -114,7 +114,7 @@ class _AddChecklistState extends ConsumerState<AddChecklist> {
       _pinned = false;
       _priority = 'High';
     });
-    FocusScope.of(context).unfocus();
+    FocusScope.of(ctx).unfocus();
   }
 
   void _submitForm(ctx) async {
@@ -154,11 +154,12 @@ class _AddChecklistState extends ConsumerState<AddChecklist> {
       int? pinnedID;
       try {
         if (widget.noteID != null) {
-          await DBHelper.updateNote('test_db', widget.noteID!, data);
+          await DBHelper.updateNote(
+              'notepinr_notes_lists', widget.noteID!, data);
           NotificationAPI.removePinnedNotifications(widget
               .noteID!); // Remove the previous notification with the same ID.
         } else {
-          pinnedID = await DBHelper.insert('test_db', data);
+          pinnedID = await DBHelper.insert('notepinr_notes_lists', data);
         }
 
         // If pinned option is selected in form, then pin notification
@@ -166,7 +167,7 @@ class _AddChecklistState extends ConsumerState<AddChecklist> {
           NotificationAPI.showNotification(
             widget.noteID == null ? pinnedID! : widget.noteID!,
             _enteredTitle,
-            _enteredDesc,
+            jsonEncode(checklistData),
             _priority,
           );
         }
@@ -492,9 +493,24 @@ class _AddChecklistState extends ConsumerState<AddChecklist> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 48.0),
+                  const SizedBox(height: 24.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        'Edited: ${widget.type.trim() == 'edit' ? '${widget.date} ${widget.time}' : '${DateFormat('dd-MM-yyyy').add_Hm().format(DateTime.now()).toString()}'}',
+                        style: TextStyle(
+                          fontFamily: 'Oxygen',
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromRGBO(128, 128, 128, 1),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 16.0),
                   FiltersButtons(
-                    onReset: _resetForm,
+                    onReset: () => _resetForm(context),
                     onExecute: (() => _submitForm(context)),
                     executeTxt: widget.type.trim() == 'edit' ? 'UPDATE' : 'ADD',
                   ),

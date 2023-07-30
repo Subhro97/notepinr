@@ -6,10 +6,10 @@ class DBHelper {
     final dbPath = await sql
         .getDatabasesPath(); // Getting the path where the DB will be stored
     return sql.openDatabase(
-      path.join(dbPath, 'test_db.db'),
+      path.join(dbPath, 'notepinr_notes_lists.db'),
       onCreate: (db, version) {
         return db.execute(
-            'CREATE TABLE test_db(id INTEGER PRIMARY KEY autoincrement, noteType TEXT, title TEXT, description TEXT, priority TEXT, pinned INTEGER, date TEXT, time TEXT, checked INTEGER DEFAULT 0)');
+            'CREATE TABLE notepinr_notes_lists(id INTEGER PRIMARY KEY autoincrement, noteType TEXT, title TEXT, description TEXT, priority TEXT, pinned INTEGER, date TEXT, time TEXT, checked INTEGER DEFAULT 0)');
       },
       // onUpgrade: (db, oldVersion, newVersion) {
       //   if (oldVersion < newVersion) {

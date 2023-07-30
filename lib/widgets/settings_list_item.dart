@@ -22,7 +22,10 @@ class SettingsListItem extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
-          Icon(icon),
+          Icon(
+            icon,
+            size: 28,
+          ),
           const SizedBox(
             width: 10,
           ),
@@ -35,13 +38,13 @@ class SettingsListItem extends StatelessWidget {
                   color: !theme
                       ? const Color.fromRGBO(0, 0, 0, 1)
                       : const Color.fromRGBO(250, 250, 250, 0.8),
-                  fontSize: 14,
+                  fontSize: 16,
                   fontWeight: FontWeight.w700,
                   // fontFamily: 'Oxygen',
                 ),
               ),
               const SizedBox(
-                height: 2,
+                height: 4,
               ),
               Text(
                 subTitle,
@@ -49,7 +52,7 @@ class SettingsListItem extends StatelessWidget {
                   color: !theme
                       ? const Color.fromRGBO(66, 66, 66, 1)
                       : const Color.fromRGBO(250, 250, 250, 0.6),
-                  fontSize: 12,
+                  fontSize: 14,
                   fontWeight: FontWeight.w400,
                   // fontFamily: 'Oxygen',
                 ),

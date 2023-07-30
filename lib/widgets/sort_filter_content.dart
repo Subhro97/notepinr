@@ -30,7 +30,13 @@ class _SortFilterContentState extends ConsumerState<SortFilterContent> {
     SharedPreferences.getInstance().then((prefs) {
       setState(() {
         sortType = prefs.getString('sort');
+        if (sortType == null) {
+          sortType = 'Priority';
+        }
         filterType = prefs.getString('filter');
+        if (filterType == null) {
+          filterType = '';
+        }
       });
     });
   }
@@ -59,7 +65,11 @@ class _SortFilterContentState extends ConsumerState<SortFilterContent> {
 
   // applying the selected options & updating the global state
   Future<void> applySortNFilters(BuildContext ctx) async {
+    print("thanos");
+    print(sortType);
+    print(filterType);
     if (sortType != null && filterType != null) {
+      print("spidey");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('sort', sortType!);
       prefs.setString('filter', filterType!);
@@ -109,7 +119,10 @@ class _SortFilterContentState extends ConsumerState<SortFilterContent> {
             ],
           ),
           FiltersButtons(
-            onReset: resetOptions,
+            onReset: () {
+              resetOptions();
+              applySortNFilters(context);
+            },
             onExecute: () => applySortNFilters(context),
           ),
         ],
