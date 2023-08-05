@@ -9,11 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notepinr/layout.dart';
 import 'package:notepinr/provider/card_mode_provider.dart';
 import 'package:notepinr/provider/theme_provider.dart';
-import 'package:notepinr/screens/checked_page.dart';
 import 'package:notepinr/utils/notification_api.dart';
 import 'package:notepinr/utils/db_helper.dart';
-import 'package:notepinr/provider/notes_provider.dart';
-import 'package:notepinr/screens/add_checklist.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'package:notepinr/utils/colors.dart';
-import 'package:notepinr/provider/notes_provider.dart';
 
 import 'package:notepinr/screens/add_checklist.dart';
 import 'package:notepinr/screens/add_note.dart';

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:notepinr/utils/file_path.dart';
 

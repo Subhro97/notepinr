@@ -47,8 +47,8 @@ class _DetailCardState extends State<DetailCard> {
           descriptionTxt.add(
             TextSpan(
               text: i != descriptionChecklist.length - 1
-                  ? descriptionChecklist[i]["text"] + '\n'
-                  : descriptionChecklist[i]["text"],
+                  ? "${i + 1}. " + descriptionChecklist[i]["text"] + '\n'
+                  : "${i + 1}. " + descriptionChecklist[i]["text"],
               style: TextStyle(
                 decoration: TextDecoration.lineThrough,
                 decorationThickness: 2.5,
@@ -60,8 +60,8 @@ class _DetailCardState extends State<DetailCard> {
           descriptionTxt.add(
             TextSpan(
               text: i != descriptionChecklist.length - 1
-                  ? descriptionChecklist[i]["text"] + '\n'
-                  : descriptionChecklist[i]["text"],
+                  ? "${i + 1}. " + descriptionChecklist[i]["text"] + '\n'
+                  : "${i + 1}. " + descriptionChecklist[i]["text"],
               style: const TextStyle(fontSize: 16),
             ),
           );

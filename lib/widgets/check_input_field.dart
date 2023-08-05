@@ -69,7 +69,7 @@ class _CheckInputFieldState extends State<CheckInputField> {
       title: TextFormField(
         focusNode: _focusNode,
         controller: _valueController,
-        // initialValue: widget.inputData.text,
+        maxLines: null,
         readOnly: false,
         onChanged: widget.onChanged,
         decoration: InputDecoration(
@@ -79,8 +79,12 @@ class _CheckInputFieldState extends State<CheckInputField> {
           ),
           border: InputBorder.none,
         ),
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'Oxygen',
+          decoration: widget.inputData.isChecked
+              ? TextDecoration.lineThrough
+              : TextDecoration.none,
+          decorationThickness: 2.5,
         ),
         onTap: () {
           if (widget.inputData.isChecked) {

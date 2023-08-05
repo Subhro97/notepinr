@@ -6,6 +6,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:notepinr/provider/card_mode_provider.dart';
 
 import 'package:notepinr/widgets/note_card.dart';
+import 'package:notepinr/widgets/fall_back.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key, required this.notes});
@@ -19,6 +20,10 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final noteCardMode = ref.watch(cardModeProvider); // To obtain the card mode
+
+    if (widget.notes.length == 0) {
+      return FallBack(isMainScreen: true);
+    }
 
     return Container(
       width: double.infinity,

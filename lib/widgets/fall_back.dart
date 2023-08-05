@@ -17,12 +17,6 @@ class FallBack extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/images/fallback_img.png',
-            color: !theme
-                ? Color.fromRGBO(235, 242, 245, 1)
-                : Color.fromRGBO(250, 250, 250, 0.3),
-          ),
           Text(
             isMainScreen ? 'no notes added' : 'no checked notes',
             style: TextStyle(
