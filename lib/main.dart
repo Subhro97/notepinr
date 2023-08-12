@@ -14,6 +14,11 @@ import 'package:notepinr/utils/db_helper.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+// NOTE: When the unpin button is selected from the Notification bar or edit
+// modal, the DB is changed but the app state is not, hence, if any issue is
+// reported due to this. Remove the unpin option in notification bar and update
+// state on edit modal. Rest when tested with workaround was working fine!
+
 var lightColorScheme = ColorScheme.fromSeed(
   seedColor: const Color.fromRGBO(59, 130, 246, 1),
 );
@@ -157,6 +162,34 @@ class _MyAppState extends ConsumerState<MyApp> {
         ),
       ),
     );
+
+    // If App started after reboot, to check if which notifications are pinned and show them in bar.
+    NotificationAPI.listOfActiveNotifications().then((notificationList) async {
+      if (notificationList.isEmpty) {
+        await DBHelper.getAllNotes('notepinr_notes_lists').then(((value) {
+          //Filter Notes which are not checked in DB
+          List<Map<String, Object?>> unCheckedNotes = value.where(
+            (note) {
+              return (note['checked'] == 0);
+            },
+          ).toList();
+          if (unCheckedNotes.isNotEmpty) {
+            unCheckedNotes.forEach((elm) {
+              elm['pinned'] == 1
+                  ? NotificationAPI.showNotification(
+                      elm['id'] as int,
+                      elm['title'] as String,
+                      elm['description'] as String,
+                      elm['priority'] as String,
+                    )
+                  : '';
+            });
+          }
+        }));
+      }
+    }).catchError((error) {
+      print(error);
+    });
 
     return theme == null
         ? MaterialApp(

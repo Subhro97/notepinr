@@ -41,9 +41,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               itemBuilder: ((context, index) {
                 return Container(
                   key: ValueKey('cont-$index'),
-                  // padding: index != (widget.notes.length - 1)
-                  //     ? const EdgeInsets.only(bottom: 16)
-                  //     : const EdgeInsets.only(bottom: 0),
                   child: NoteCard(
                     key: ValueKey(widget.notes[index]['id']),
                     id: widget.notes[index]['id'],

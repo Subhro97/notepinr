@@ -85,7 +85,6 @@ flutter:
     - assets/images/medium.png
     - assets/images/low.png
     - assets/images/notepinr_logo.png
-    - assets/images/fallback_img.png
     - assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see

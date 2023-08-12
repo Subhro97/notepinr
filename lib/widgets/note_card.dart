@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -75,7 +77,7 @@ class _NoteCardState extends ConsumerState<NoteCard> {
             ),
             onChecked: (bool checkedStatus, bool pinStatus) =>
                 _checkedHandler(checkedStatus, pinStatus),
-            onShare: () => _shareNoteHandler(),
+            onShare: (String noteType) => _shareNoteHandler(noteType),
           ),
         );
       }),
@@ -99,9 +101,26 @@ class _NoteCardState extends ConsumerState<NoteCard> {
     }
   }
 
-  void _shareNoteHandler() async {
+  void _shareNoteHandler(String noteType) async {
     Navigator.pop(context);
-    Share.share('${widget.title}\n\n${widget.text}\n\n~ From notepinr');
+    if (noteType != 'checklist') {
+      widget.text.length > 0
+          ? Share.share('${widget.title}\n\n${widget.text}\n\n~ From notepinr')
+          : Share.share('${widget.title}\n\n~ From notepinr');
+    } else {
+      List checklistArr = jsonDecode(widget.text);
+      String txt = '';
+      checklistArr.forEach((elm) {
+        if (elm['isChecked'] == true) {
+          txt += elm['text'] + "\s" + " ✓" + '\n';
+        } else {
+          txt += elm['text'] + '\n';
+        }
+      });
+      txt.length > 0
+          ? Share.share('${widget.title}\n\n${txt}\n\n~ From notepinr')
+          : Share.share('${widget.title}\n\n~ From notepinr');
+    }
   }
 
   // Pushes the Delete Modal screen after removing the edit modal screen

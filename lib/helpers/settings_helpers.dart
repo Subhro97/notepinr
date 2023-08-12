@@ -18,7 +18,7 @@ class SettingsHelpers {
 
   static void shareAppHandler() {
     Share.share(
-        '📌 Never miss a beat! notepinr keeps your important reminders within reach, right in your notification bar. \n\n Download now: https://play.google.com/store/apps/details?id=com.optimus.notepinr');
+        '📌 Never miss a beat! Notepinr keeps your important reminders within reach, right in your notification bar. \n\n Download now: https://play.google.com/store/apps/details?id=com.optimus.notepinr');
   }
 
   static Future<void> suggestionNbugHandler(String type) async {

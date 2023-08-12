@@ -39,7 +39,7 @@ class EditContent extends StatefulWidget {
     TimeOfDay? time,
   ) onClone;
   final void Function(bool checkedStatus, bool pinStatus) onChecked;
-  final void Function() onShare;
+  final void Function(String noteType) onShare;
 
   @override
   State<EditContent> createState() => _EditContentState();
@@ -148,7 +148,7 @@ class _EditContentState extends State<EditContent> {
               EditItem(
                 type: 'share',
                 value: null,
-                onTapHandler: () => widget.onShare(),
+                onTapHandler: () => widget.onShare(widget.noteType),
               ),
               EditItem(
                 type: 'delete',
@@ -185,7 +185,7 @@ class _EditContentState extends State<EditContent> {
               EditItem(
                 type: 'share',
                 value: null,
-                onTapHandler: () => widget.onShare(),
+                onTapHandler: () => widget.onShare(widget.noteType),
               ),
               EditItem(
                 type: 'delete',

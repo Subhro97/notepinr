@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:notepinr/utils/notification_api.dart';
-
 import 'package:notepinr/widgets/bottom_sheet_content.dart';
 import 'package:notepinr/widgets/sort_filter_content.dart';
 
@@ -129,24 +127,6 @@ class _LayoutState extends ConsumerState<Layout> {
       ),
       const Settings()
     ];
-
-    // If App started after reboot, to check if which notifications are pinned and show them in bar.
-    NotificationAPI.listOfActiveNotifications().then((notificationList) {
-      if (notificationList.isEmpty && _notesList.isNotEmpty) {
-        _notesList.forEach((elm) {
-          elm['pinned'] == 1
-              ? NotificationAPI.showNotification(
-                  elm['id'],
-                  elm['title'],
-                  elm['description'],
-                  elm['priority'],
-                )
-              : '';
-        });
-      }
-    }).catchError((error) {
-      print(error);
-    });
 
     bool theme = Theme.of(context).brightness == Brightness.dark;
 

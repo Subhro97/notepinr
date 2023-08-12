@@ -65,11 +65,7 @@ class _SortFilterContentState extends ConsumerState<SortFilterContent> {
 
   // applying the selected options & updating the global state
   Future<void> applySortNFilters(BuildContext ctx) async {
-    print("thanos");
-    print(sortType);
-    print(filterType);
     if (sortType != null && filterType != null) {
-      print("spidey");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('sort', sortType!);
       prefs.setString('filter', filterType!);

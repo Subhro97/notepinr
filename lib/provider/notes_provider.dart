@@ -40,13 +40,16 @@ class NotesNotifier extends StateNotifier<List<Map<String, Object?>>> {
       res = res;
     }
 
+    var filteredRes;
     // Filering Notes by Pinned status
     if (filterType == 'Pinned') {
-      res = res.where((note) => note['pinned'] == 1).toList();
+      filteredRes = res.where((note) => note['pinned'] == 1).toList();
+    } else {
+      filteredRes = res;
     }
 
     //Filter Notes which are not checked in DB
-    List<Map<String, Object?>> unCheckedNotes = res.where(
+    List<Map<String, Object?>> unCheckedNotes = filteredRes.where(
       (note) {
         return (note['checked'] == 0);
       },
